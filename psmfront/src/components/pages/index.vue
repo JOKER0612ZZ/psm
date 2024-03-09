@@ -5,12 +5,11 @@
 </template>
 
 <script setup lang="ts">
+
 import { queryUser } from '@/api/user';
 const search = () => {
     queryUser()
 }
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

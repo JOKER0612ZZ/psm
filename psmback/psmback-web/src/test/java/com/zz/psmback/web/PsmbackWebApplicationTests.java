@@ -6,6 +6,7 @@ import com.zz.psmback.common.result.CommonResult;
 import com.zz.psmback.common.utils.JwtUtils;
 import com.zz.psmback.common.utils.RedisUtils;
 import com.zz.psmback.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +22,7 @@ import java.util.Objects;
 
 
 @SpringBootTest
+@Slf4j
 class PsmbackWebApplicationTests {
     @Autowired
     private RedisTemplate<String,Object> redistemplate;
@@ -36,9 +38,11 @@ class PsmbackWebApplicationTests {
     RedisUtils redisUtils;
     @Test
     void contextLoads() {
-        String msg="111";
-        redistemplate.opsForValue().set("msg",msg);
-        System.out.println(redistemplate.opsForValue().get("msg"));
+        log.info("User_"+userService.queryUserByUserId(6));
+        log.info("User_"+userService.updateNickNameAndGenderById(6,"zouzan","男"));
+        log.info("User_"+userService.updateEmailById(6,"6666"));
+        log.info("User_"+userService.updateUserNameById(6,"zouzan"));
+        log.info("User_"+userService.updateUserNameById(6,"admin"));
     }
 
 //    @Test

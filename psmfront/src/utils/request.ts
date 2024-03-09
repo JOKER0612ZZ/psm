@@ -19,9 +19,8 @@ export interface ResponseData<T = any> {
 service.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
         const token = window.sessionStorage.getItem('token')
-        console.log(token)
         if(token!==null){
-            config.headers.set('token',token)
+            config.headers['token'] = token;
         }
         // if(store.userInfo.data.token!==''){
         //     console.log(store.userInfo.data.token)
@@ -32,7 +31,7 @@ service.interceptors.request.use(
     },
     (error: any) => {
         // 请求错误时做些事情
-        ElMessage.error(error)
+        ElMessage.error(error.message)
         return Promise.reject(error)
     }
 )
@@ -47,7 +46,7 @@ service.interceptors.response.use(
         */
         const res = response.data;
         console.log(response)
-        if (response.status == 200 && res.code == 200) {
+        if (response.status == 200 && res.success) {
             ElMessage.success(res.message)
         }else {
             ElMessage.error(res.message)

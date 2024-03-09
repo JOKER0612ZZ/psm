@@ -9,6 +9,7 @@ import com.zz.psmback.common.utils.JwtUtils;
 import com.zz.psmback.common.utils.RedisUtils;
 import com.zz.psmback.dao.UserDao;
 import com.zz.psmback.service.LoginService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +22,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Service
+@Slf4j
 public class LoginServiceImpl implements LoginService {
     @Autowired
     UserDao userDao;
@@ -86,12 +88,13 @@ public class LoginServiceImpl implements LoginService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         String username = loginUser.getUsername();
+        log.info("Authentication"+username);
         //删除redis中存的信息
         redisUtils.delete("Token_" + username);
         redisUtils.delete("UserDetails_" + username);
         //清除上下文
         SecurityContextHolder.clearContext();
         return CommonResult.success(true,ResponseCode.SUCCESS.getCode(),
-                ResponseCode.SUCCESS.getMessage(), null);
+                "已退出登录，请重新登陆", null);
     }
 }

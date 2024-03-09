@@ -48,6 +48,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'file',
         component: () => import('@/components/pages/file.vue')
       },
+      {
+        path: 'personal',
+        name: 'personal',
+        component: () => import('@/components/pages/personal.vue')
+      }
     ]
   }
 ]

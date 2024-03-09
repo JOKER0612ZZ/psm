@@ -16,10 +16,12 @@ public class User {
     private String password;
     private String email;
     private String nickname;
+    private String gender;
     public User(Integer serId, String userName) {
         this.userId = serId;
         this.userName = userName;
     }
     public User() {
+
     }
 }

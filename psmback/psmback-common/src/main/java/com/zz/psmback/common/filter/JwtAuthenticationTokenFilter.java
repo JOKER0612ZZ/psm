@@ -36,7 +36,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         Claims claim = JwtUtils.decode(token).getBody();
         String username = (String) claim.get("userName");
         String redisToken = (String) redisUtils.get("Token_" + username);
-        System.out.println(token.equals(redisToken));
         if (token.equals(redisToken)) {
             LoginUser loginUser = (LoginUser) redisUtils.get("UserDetails_" + username);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, null);

@@ -14,6 +14,7 @@
                             <el-icon>
                                 <HomeFilled />
                             </el-icon>
+
                             <template #title>
                                 <span>工作台</span>
                             </template>
@@ -72,26 +73,28 @@
                 </el-menu>
             </el-aside>
             <el-main>
-                <router-view></router-view>
+                <user-router></user-router>
+                <router-view>
+                </router-view>
             </el-main>
         </el-container>
     </div>
 </template>
 
 <script setup lang="ts">
+import userRouter from '@/components/main-views/user.vue'
 import { ref, reactive, toRef, onBeforeMount } from 'vue'
 import { useUserStore } from '@/store/user'
-const store = useUserStore()
 const user = reactive({
     userInfo: {}
 })
+let userInfo: any = toRef(user, 'userInfo')
 const isCollapse = ref(false)
 const draf = ref<any>(null)
-let userInfo: any = toRef(user, 'userInfo')
+const store = useUserStore()  
 onBeforeMount(() => {
     userInfo = store.userInfo.data
 })
-
 
 
 const handle = () => {
@@ -117,14 +120,17 @@ const handle = () => {
     position: absolute;
     left: 0;
     top: 0;
+    overflow: visible;
 }
 
 .el-aside {
     height: 100vh;
+    overflow: hidden;
 }
 
 .el-main {
     height: 100vh;
+    padding:0;
 }
 
 .el-menu-vertical:not(.el-menu--collapse) {

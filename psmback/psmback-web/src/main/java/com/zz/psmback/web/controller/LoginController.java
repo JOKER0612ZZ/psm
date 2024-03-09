@@ -8,10 +8,7 @@ import com.zz.psmback.service.UserService;
 import com.zz.psmback.service.serviceimpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RestController
@@ -28,5 +25,9 @@ public class LoginController {
     @RequestMapping("/register")
     public CommonResult<?> register(@RequestBody User user) {
         return loginService.register(user);
+    }
+    @RequestMapping(value = "/logout",method = RequestMethod.GET)
+    public CommonResult<?> logout(){
+        return loginService.logout();
     }
 }

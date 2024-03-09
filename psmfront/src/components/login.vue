@@ -20,7 +20,7 @@
                 </el-form-item>
                 <span>密码</span>
                 <el-form-item prop="password">
-                    <el-input v-model="loginForm.password" type="password" autocomplete="off" />
+                    <el-input v-model="loginForm.password" type="password" autocomplete="off" show-password/>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm()">登录</el-button>

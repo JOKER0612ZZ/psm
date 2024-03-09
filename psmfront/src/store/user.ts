@@ -8,7 +8,7 @@ export const useUserStore = defineStore('user', {
             data: {
                 token: '',
                 userName:'',
-                
+                userId:''
             },
             message: '',
             success: false
@@ -17,11 +17,9 @@ export const useUserStore = defineStore('user', {
     actions: {
         setUserInfo(data: any) {
             this.userInfo = data
-        }
-    },
-    getters: {
-        getUserInfo(state): any  {
-            return state.userInfo
+        },
+        getUserInfo():any  {
+            return this.userInfo.data
         }
     },
     persist: {
