@@ -30,4 +30,9 @@ public class UserController {
     public CommonResult<?> updateEmailById(@PathVariable("userId") Integer userId, @PathVariable("email") String email) {
         return userService.updateEmailById(userId,email);
     }
+    @RequestMapping(value = "/updatePasswordById/{userId}/{oldPassword}/{newPassword}",method = RequestMethod.GET)
+    public CommonResult<?> updatePasswordById(@PathVariable("userId") Integer userId,@
+            PathVariable("oldPassword") String oldPassword, @PathVariable("newPassword") String newPassword) {
+        return userService.updatePasswordById(userId,oldPassword,newPassword);
+    }
 }

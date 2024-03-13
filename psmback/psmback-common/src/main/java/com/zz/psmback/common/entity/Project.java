@@ -13,4 +13,5 @@ public class Project {
     private String creationTime;
     private String deadline;
     private Integer creatorId;
+    private String mark;
 }

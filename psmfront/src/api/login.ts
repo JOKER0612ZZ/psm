@@ -3,7 +3,10 @@ import router from '@/router/index'
 import { useUserStore } from '@/store/user'
 const store = useUserStore()
 export const login = (data: any) => {
-    request.post('/api/login', data).then(res => {
+    request.post('/api/login', {
+        userName:data.userName,
+        password:data.password
+    }).then(res => {
         if (res.success == true) {
             store.setUserInfo(res)
             window.sessionStorage.setItem("token", res.data.token)
@@ -25,5 +28,4 @@ export const logout = () => {
             router.replace("/login")
         }
     })
-
 }

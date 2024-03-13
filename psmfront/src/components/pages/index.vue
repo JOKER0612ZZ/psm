@@ -1,15 +1,16 @@
 <template>
-    <div>
-        <el-button type="primary" @click="search()">search</el-button>
+    <div class="myHeader"></div>
+    <div class="myBody">
+        <div class="aside">
+            
+        </div>
+        <div class="main"></div>
     </div>
 </template>
 
 <script setup lang="ts">
-
-import { queryUser } from '@/api/user';
-const search = () => {
-    queryUser()
-}
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@import url('../../css/index.css');
+</style>

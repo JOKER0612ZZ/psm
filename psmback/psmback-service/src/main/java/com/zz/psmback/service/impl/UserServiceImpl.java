@@ -1,4 +1,4 @@
-package com.zz.psmback.service.serviceimpl;
+package com.zz.psmback.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -8,13 +8,15 @@ import com.zz.psmback.common.result.ResponseCode;
 import com.zz.psmback.dao.UserDao;
 import com.zz.psmback.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     UserDao userDao;
-
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Override
     public User queryUserByUserId(Integer userId) {
         QueryWrapper<User> query = new QueryWrapper<>();
@@ -63,5 +65,21 @@ public class UserServiceImpl implements UserService {
         QueryWrapper<User> query = new QueryWrapper<>();
         query.eq("user_name",userName);
         return userDao.selectOne(query);
+    }
+
+    @Override
+    public CommonResult<?> updatePasswordById(Integer userId, String oldPassword, String newPassword) {
+        User user = queryUserByUserId(userId);
+        if(!passwordEncoder.matches(oldPassword,user.getPassword())) {
+            return CommonResult.error(false,2034,"旧密码输入错误",null);
+        }
+        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+        String password= passwordEncoder.encode(newPassword);
+        wrapper.set("password",password).eq("user_id",userId);
+        if(userDao.update(null, wrapper)==0) {
+            return CommonResult.error(false,2033,"更改出错",null);
+        }
+        user.setPassword(password);
+        return CommonResult.success(true,1034,"密码更改成功",user);
     }
 }

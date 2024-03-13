@@ -9,10 +9,10 @@
                     <el-input v-model="registerForm.userName" type="text"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
-                    <el-input v-model="registerForm.password" type="password" autocomplete="off" />
+                    <el-input v-model="registerForm.password" type="password" autocomplete="off" show-password/>
                 </el-form-item>
                 <el-form-item label="确认密码" prop="checkPass">
-                    <el-input v-model="registerForm.checkPass" type="password" autocomplete="off" />
+                    <el-input v-model="registerForm.checkPass" type="password" autocomplete="off" show-password/>
                 </el-form-item>
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="registerForm.email" type="text"></el-input>

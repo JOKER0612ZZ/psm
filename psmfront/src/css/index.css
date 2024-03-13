@@ -1,6 +1,58 @@
-body{
-    width: 100vh;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
+.myHeader {
+    height: 7%;
+    box-shadow: 0 4px 8px #00000008;
+    position: relative;
+    z-index: 2;
+    border-bottom: 1px solid #eee;
+}
+
+.myBody {
+    display: flex;
+    flex-direction: row;
+    height: 93%;
+}
+
+.myBody .aside {
+    padding: 10px;
+    height: 100%;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    border-right: 2px solid #eee;
+}
+
+.myBody .main {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-y: scroll;
+    width: 80%;
+}
+.aside_menu{
+    margin: 0 10px;
+  
+    display: flex;
+    flex-direction: column;
+}
+.aside_menu a {
+    display: block;
+    color: #333;
+    padding: 10px;
+    font-size: 15px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.aside_menu a:hover {
+    color: #6698ff;
+    background-color: #6698ff1a;
+}
+.aside span{
+    display: block;
+    text-align: left;
+    margin: 0 10px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #999;
+    line-height:40px;
 }

@@ -31,7 +31,25 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'project',
         name: 'project',
-        component: () => import('@/components/pages/project.vue')
+        component: () => import('@/components/pages/project.vue'),
+        redirect: '/home/project/totalPro',
+        children:[
+          {
+            path:'totalPro',
+            name:'totalPro',
+            component: () => import('@/components/pages/project/totalPro.vue')
+          },
+          {
+            path:'createPro',
+            name:'createPro',
+            component:()=> import('@/components/pages/project/createPro.vue')
+          },
+          {
+            path:'joinPro',
+            name:'joinPro',
+            component: () => import('@/components/pages/project/joinPro.vue')
+          }
+        ]
       },
       {
         path: 'team',

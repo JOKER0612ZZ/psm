@@ -83,18 +83,21 @@
 
 <script setup lang="ts">
 import userRouter from '@/components/main-views/user.vue'
-import { ref, reactive, toRef, onBeforeMount } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import { useUserStore } from '@/store/user'
-const user = reactive({
-    userInfo: {}
+import eventBus from '@/utils/event';
+let userInfo = ref({
+    userName: '',
 })
-let userInfo: any = toRef(user, 'userInfo')
 const isCollapse = ref(false)
 const draf = ref<any>(null)
-const store = useUserStore()  
+const store = useUserStore()
 onBeforeMount(() => {
-    userInfo = store.userInfo.data
+    userInfo.value = store.userInfo.data
 })
+eventBus.on('userInfo', (data) => {
+    userInfo.value = data;
+});
 
 
 const handle = () => {
@@ -130,7 +133,8 @@ const handle = () => {
 
 .el-main {
     height: 100vh;
-    padding:0;
+    overflow: hidden;
+    padding: 0;
 }
 
 .el-menu-vertical:not(.el-menu--collapse) {

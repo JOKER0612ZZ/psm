@@ -1,4 +1,4 @@
-package com.zz.psmback.service.serviceimpl;
+package com.zz.psmback.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zz.psmback.common.entity.LoginUser;
@@ -14,12 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Objects;
 
 @Service
 @Slf4j
@@ -45,9 +45,10 @@ public class LoginServiceImpl implements LoginService {
         }
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(),
                 user.getPassword());
-        Authentication authentication = authenticationManager.authenticate(authenticationToken);
-        if(Objects.isNull(authentication)){
-            //返回用户名或密码错误
+        Authentication authentication;
+        try{
+             authentication = authenticationManager.authenticate(authenticationToken);
+        }catch(AuthenticationException e){
             return CommonResult.error(false,ResponseCode.USERNAME_PASSWORD_ERROR.getCode(),
                     ResponseCode.USERNAME_PASSWORD_ERROR.getMessage(), null);
         }

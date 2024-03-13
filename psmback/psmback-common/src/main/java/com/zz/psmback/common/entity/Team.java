@@ -11,4 +11,11 @@ public class Team {
     private Integer creatorId;
     private String creationTime;
     private Integer projectId;
+    public Team() {}
+    public Team(String teamName, Integer creatorId, String creationTime, Integer projectId) {
+        this.teamName = teamName;
+        this.creatorId = creatorId;
+        this.creationTime = creationTime;
+        this.projectId = projectId;
+    }
 }

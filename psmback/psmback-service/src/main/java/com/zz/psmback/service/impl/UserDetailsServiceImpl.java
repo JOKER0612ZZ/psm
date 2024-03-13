@@ -1,4 +1,4 @@
-package com.zz.psmback.service.serviceimpl;
+package com.zz.psmback.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zz.psmback.common.entity.LoginUser;

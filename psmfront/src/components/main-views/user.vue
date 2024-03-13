@@ -71,17 +71,20 @@
 
 <script setup lang="ts">
 import { useUserStore } from '@/store/user';
-import { ref, toRef, reactive, onBeforeMount } from 'vue'
+import { ref, reactive, onBeforeMount,inject } from 'vue'
 import { logout } from '@/api/login';
 const store = useUserStore()
 onBeforeMount(() => {
-    userInfo = store.userInfo.data
+    Object.assign(userInfo, store.userInfo.data);
 })
 const drawer = ref(false)
-const user = reactive({
-    userInfo: {}
+let userInfo = reactive({
+    userName:'',
+    nickname:'',
+    gender:'',
+    email:'',
 })
-let userInfo: any = toRef(user, 'userInfo')
+inject('userInfo',userInfo)
 </script>
 
 <style lang="scss" scoped>
@@ -89,7 +92,7 @@ let userInfo: any = toRef(user, 'userInfo')
     position: absolute;
     top: 5px;
     right: 20px;
-    background-color: #409eff;
+    background-color: #5dcfff;
     width: 40px;
     height: 40px;
     font-size: 12px;

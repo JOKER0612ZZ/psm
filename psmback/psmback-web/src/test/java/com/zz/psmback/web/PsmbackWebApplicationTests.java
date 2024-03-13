@@ -38,11 +38,12 @@ class PsmbackWebApplicationTests {
     RedisUtils redisUtils;
     @Test
     void contextLoads() {
-        log.info("User_"+userService.queryUserByUserId(6));
-        log.info("User_"+userService.updateNickNameAndGenderById(6,"zouzan","男"));
-        log.info("User_"+userService.updateEmailById(6,"6666"));
-        log.info("User_"+userService.updateUserNameById(6,"zouzan"));
-        log.info("User_"+userService.updateUserNameById(6,"admin"));
+//        log.info("User_"+userService.queryUserByUserId(6));
+//        log.info("User_"+userService.updateNickNameAndGenderById(6,"zouzan","男"));
+//        log.info("User_"+userService.updateEmailById(6,"6666"));
+//        log.info("User_"+userService.updateUserNameById(6,"zouzan"));
+//        log.info("User_"+userService.updateUserNameById(6,"admin"));
+        log.info(""+PasswordEncoder.matches("zouzan",userService.queryUserByUserName("admin").getPassword()));
     }
 
 //    @Test
