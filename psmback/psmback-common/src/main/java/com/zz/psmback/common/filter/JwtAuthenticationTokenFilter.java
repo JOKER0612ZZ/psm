@@ -4,6 +4,7 @@ import com.zz.psmback.common.entity.LoginUser;
 import com.zz.psmback.common.utils.JwtUtils;
 import com.zz.psmback.common.utils.RedisUtils;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import java.io.IOException;
  * @date 2024/03/02
  */
 @Component
+@Slf4j
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     RedisUtils redisUtils;
@@ -36,6 +38,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         Claims claim = JwtUtils.decode(token).getBody();
         String username = (String) claim.get("userName");
         String redisToken = (String) redisUtils.get("Token_" + username);
+        log.info("redisToken与token是否匹配:"+redisToken.equals(token));
         if (token.equals(redisToken)) {
             LoginUser loginUser = (LoginUser) redisUtils.get("UserDetails_" + username);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, null);

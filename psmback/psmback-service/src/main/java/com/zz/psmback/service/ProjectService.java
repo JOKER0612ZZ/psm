@@ -6,4 +6,5 @@ import org.springframework.stereotype.Service;
 
 public interface ProjectService {
     CommonResult<?> createProject(Project project,String teamName);
+    CommonResult<?> queryUserProject(Integer userId);
 }

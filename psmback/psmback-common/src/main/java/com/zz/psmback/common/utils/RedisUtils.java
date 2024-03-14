@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -30,8 +31,8 @@ public class RedisUtils {
             return true;
         }catch (Exception e){
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
     /**
      * 是否有key
@@ -39,9 +40,8 @@ public class RedisUtils {
      */
     public boolean hasKey(String key){
         try {
-            if(Boolean.TRUE.equals(redisTemplate.hasKey(key))){
+            if(redisTemplate.hasKey(key))
                 return true;
-            };
         }catch (Exception e){
             e.printStackTrace();
             return false;
@@ -50,7 +50,7 @@ public class RedisUtils {
     }
 
     /**
-     * 删除单哥对象
+     * 删除单个对象
      * @param key 键
      */
     public void delete(String key){
@@ -60,5 +60,37 @@ public class RedisUtils {
             e.printStackTrace();
         }
     }
-
+    /**
+     * 插入链表
+     * @param key 键
+     */
+    public void lPush(String key, List<?> lists){
+        try{
+            for(Object list: lists){
+                redisTemplate.opsForList().leftPush(key,list);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 取出链表
+     * @param key 键
+     */
+    public Object lPop(String key){
+        try{
+            return redisTemplate.opsForList().leftPop(key);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public Object Range(String key){
+        try{
+            return redisTemplate.opsForList().range(key,0,-1);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

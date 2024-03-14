@@ -16,4 +16,8 @@ public class ProjectController {
     public CommonResult<?> queryProject(@RequestBody Project project, @PathVariable("teamName") String teamName) {
         return projectService.createProject(project,teamName);
     }
+    @RequestMapping(value="/queryUserProject/{userId}",method = RequestMethod.POST)
+    public CommonResult<?> queryUserProject(@PathVariable("userId") Integer userId) {
+        return projectService.queryUserProject(userId);
+    }
 }

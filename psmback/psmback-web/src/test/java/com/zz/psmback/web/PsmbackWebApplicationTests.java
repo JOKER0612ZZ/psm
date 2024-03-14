@@ -5,6 +5,7 @@ import com.zz.psmback.common.entity.User;
 import com.zz.psmback.common.result.CommonResult;
 import com.zz.psmback.common.utils.JwtUtils;
 import com.zz.psmback.common.utils.RedisUtils;
+import com.zz.psmback.service.ProjectService;
 import com.zz.psmback.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,8 @@ class PsmbackWebApplicationTests {
     @Autowired
     AuthenticationManager  authenticationManager;
     @Autowired
+    ProjectService projectService;
+    @Autowired
     UserDetailsService userDetailsService;
     @Autowired
     UserService userService;
@@ -43,7 +46,7 @@ class PsmbackWebApplicationTests {
 //        log.info("User_"+userService.updateEmailById(6,"6666"));
 //        log.info("User_"+userService.updateUserNameById(6,"zouzan"));
 //        log.info("User_"+userService.updateUserNameById(6,"admin"));
-        log.info(""+PasswordEncoder.matches("zouzan",userService.queryUserByUserName("admin").getPassword()));
+        redisUtils.delete("Project_User_"+1);
     }
 
 //    @Test

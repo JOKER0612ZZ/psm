@@ -12,4 +12,5 @@ public interface UserService {
     CommonResult<?> updateUserNameById(Integer userId, String userName);
     CommonResult<?> updateEmailById(Integer userId,String email);
     CommonResult<?> updatePasswordById(Integer userId,String oldPassword,String newPassword);
+
 }

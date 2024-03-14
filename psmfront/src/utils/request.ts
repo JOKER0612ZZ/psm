@@ -46,9 +46,11 @@ service.interceptors.response.use(
         */
         const res = response.data;
         console.log(response)
-        if (response.status == 200 && res.success) {
+        if (response.status == 200 && res.success&&res.code!==3002) {
             ElMessage.success(res.message)
-        }else {
+        }else if(res.code==3002){
+           return res; 
+        }else{
             ElMessage.error(res.message)
         }
         return res;

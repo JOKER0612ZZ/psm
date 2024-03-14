@@ -71,20 +71,23 @@
 
 <script setup lang="ts">
 import { useUserStore } from '@/store/user';
-import { ref, reactive, onBeforeMount,inject } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import { logout } from '@/api/login';
+import eventBus from '@/utils/event';
 const store = useUserStore()
 onBeforeMount(() => {
-    Object.assign(userInfo, store.userInfo.data);
+    Object.assign(userInfo.value, store.userInfo.data);
 })
 const drawer = ref(false)
-let userInfo = reactive({
+let userInfo = ref({
     userName:'',
     nickname:'',
     gender:'',
     email:'',
 })
-inject('userInfo',userInfo)
+eventBus.on('userInfo', (data) => {
+    userInfo.value = data;
+});
 </script>
 
 <style lang="scss" scoped>
@@ -113,9 +116,8 @@ inject('userInfo',userInfo)
 #user_info:deep(.el-drawer) {
     height: 80%;
     margin-top: 80px;
-    width: 330px !important;
+    width: 300px !important;
     top: 0;
-    right: 10px;
     bottom: 0;
     border-radius: 10px;
     border: 1px solid #eee;
@@ -123,7 +125,7 @@ inject('userInfo',userInfo)
 }
 
 :deep(.ttb) {
-    left: 77%;
+    left: 79%;
     height: 65% !important;
 }
 

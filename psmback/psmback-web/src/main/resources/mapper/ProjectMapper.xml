@@ -2,5 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zz.psmback.dao.ProjectDao">
-
+    <select id="queryUserProject" resultType="com.zz.psmback.common.entity.Project">
+        select p.project_id, project_name, project_status, description, p.creation_time, deadline, p.creator_id, mark
+        FROM team_member as tm
+        INNER JOIN team AS t ON tm.team_id = t.team_id
+        INNER JOIN project as p
+        ON t.project_id = p.project_id
+        WHERE member_id=#{userId}
+    </select>
 </mapper>
