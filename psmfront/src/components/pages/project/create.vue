@@ -14,13 +14,13 @@
             </template>
             <div class="dialog_body" v-if="stepStore.currentStep === 1">
                 <el-form label-position="top" size="large" v-model="projectForm">
-                    <el-form-item label="项目名称" prop="projectName">
+                    <el-form-item label="项目名称" prop="projectName" class="required-label">
                         <el-input type="text" v-model="projectForm.projectName" maxlength="255" show-word-limit></el-input>
                     </el-form-item>
-                    <el-form-item label="项目标识" prop="mark">
+                    <el-form-item label="项目标识" prop="mark" class="required-label">
                         <el-input type="text" v-model="projectForm.mark"></el-input>
                     </el-form-item>
-                    <el-form-item label="截止时间" prop="deadline">
+                    <el-form-item label="截止时间" prop="deadline" class="required-label">
                         <el-input type="date" v-model="projectForm.deadline"></el-input>
                     </el-form-item>
                     <el-form-item label="项目描述" prop="description">
@@ -35,7 +35,7 @@
             </div>
             <div class="dialog_body" v-if="stepStore.currentStep === 2">
                 <el-form label-position="top" size="large" >
-                    <el-form-item label="团队名称" prop="teamName">
+                    <el-form-item label="团队名称" prop="teamName" class="required-label">
                         <el-input type="text" v-model="teamName" maxlength="255" show-word-limit></el-input>
                     </el-form-item>
                 </el-form>
@@ -93,7 +93,7 @@ const visible = ref(false)
     border-radius: 5px;
 }
 
-:deep(.el-form-item:not([label="项目描述"]) > label)::after {
+:deep(.required-label > label::after) {
     content: "*";
     color: #ff7575;
     margin-left: 4px;

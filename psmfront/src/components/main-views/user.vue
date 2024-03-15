@@ -116,7 +116,7 @@ eventBus.on('userInfo', (data) => {
 #user_info:deep(.el-drawer) {
     height: 80%;
     margin-top: 80px;
-    width: 300px !important;
+    width: 320px !important;
     top: 0;
     bottom: 0;
     border-radius: 10px;
@@ -125,7 +125,7 @@ eventBus.on('userInfo', (data) => {
 }
 
 :deep(.ttb) {
-    left: 79%;
+    left: 78%;
     height: 65% !important;
 }
 

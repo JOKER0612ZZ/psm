@@ -20,7 +20,7 @@
                             </template>
                         </el-menu-item>
                     </router-link>
-                    <router-link to="/home/project">
+                    <router-link to="/home/project" @click="projectMain">
                         <el-menu-item index="3">
                             <el-icon>
                                 <Calendar />
@@ -86,6 +86,12 @@ import userRouter from '@/components/main-views/user.vue'
 import { ref, onBeforeMount } from 'vue'
 import { useUserStore } from '@/store/user'
 import eventBus from '@/utils/event';
+eventBus.on('userInfo', (data) => {
+    userInfo.value = data;
+})
+const projectMain = ()=>{
+    eventBus.emit('projectDetails',false)
+}
 let userInfo = ref({
     userName: '',
 })
@@ -95,9 +101,7 @@ const store = useUserStore()
 onBeforeMount(() => {
     userInfo.value = store.userInfo.data
 })
-eventBus.on('userInfo', (data) => {
-    userInfo.value = data;
-});
+
 
 
 const handle = () => {

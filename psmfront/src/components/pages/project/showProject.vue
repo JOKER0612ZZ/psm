@@ -36,6 +36,8 @@ import { queryUserProject } from '@/api/project';
 import { useUserStore } from '@/store/user';
 import { useStepStore } from '@/store/step';
 import eventBus from '@/utils/event';
+import { useRouter } from "vue-router"
+const router = useRouter()
 const userStore = useUserStore()
 const stepStore = useStepStore()
 interface Project{
@@ -61,7 +63,9 @@ onMounted(async ()=>{
     console.log(projects.value)
 })
 const goProjectDetail = (row:any) =>{
-    
+    eventBus.emit('project',row)
+    eventBus.emit('projectDetails',true)
+    router.push(`/home/project/details/${row.mark}`)
 }
 
 // filterNotmetchant(){

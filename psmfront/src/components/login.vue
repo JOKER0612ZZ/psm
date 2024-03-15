@@ -23,7 +23,7 @@
                     <el-input v-model="loginForm.password" type="password" autocomplete="off" show-password/>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm()">登录</el-button>
+                    <el-button type="primary" @click="goLogin()">登录</el-button>
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="resetForm(LoginFormRef)">Reset</el-button>
@@ -75,8 +75,12 @@ const rules = reactive<FormRules<typeof loginForm>>({
     userName: [{ validator: validateName, trigger: 'blur' }],
     password: [{ validator: validatePass, trigger: 'blur' }],
 })
-
-const submitForm = () => {
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        goLogin()
+    }
+});
+const goLogin = () => {
     if (loginForm.password !== '' && loginForm.userName !== '') {
         login(loginForm)
     } else {

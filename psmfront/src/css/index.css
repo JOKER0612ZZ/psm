@@ -1,11 +1,22 @@
 .myHeader {
+    display: flex;
     height: 7%;
     box-shadow: 0 4px 8px #00000008;
+    align-items: center;
     position: relative;
     z-index: 2;
     border-bottom: 1px solid #eee;
 }
-
+.myHeader span{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 17px;
+    margin-left: 25px;
+}
+.myHeader span svg{
+    margin-right: 10px;
+}
 .myBody {
     display: flex;
     flex-direction: row;
@@ -35,12 +46,16 @@
     flex-direction: column;
 }
 .aside_menu a {
-    display: block;
+    display: flex;
     color: #333;
+    align-items: center;
     padding: 10px;
     font-size: 15px;
     text-align: left;
     cursor: pointer;
+}
+.aside_menu a svg{
+    margin-right: 10px;
 }
 
 .aside_menu a:hover {
