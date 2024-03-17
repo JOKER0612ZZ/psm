@@ -64,6 +64,7 @@ onMounted(async ()=>{
 })
 const goProjectDetail = (row:any) =>{
     eventBus.emit('project',row)
+    console.log(row)
     eventBus.emit('projectDetails',true)
     router.push(`/home/project/details/${row.mark}`)
 }

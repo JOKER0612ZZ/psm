@@ -36,7 +36,19 @@ const routes: Array<RouteRecordRaw> = [
           {
             path:'details/:mark',
             name:'details',
-            component: () => import('@/components/pages/project/details.vue')
+            component: () => import('@/components/pages/project/details.vue'),
+            children:[
+              {
+                path:'view',
+                name:'view',
+                component:() =>import('@/components/details/view.vue')
+              },
+              {
+                path:'demand',
+                name:'demand',
+                component:()=>import('@/components/details/demand.vue')
+              }
+            ]
           },
         ]
       },

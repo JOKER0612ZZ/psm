@@ -4,7 +4,6 @@ import { defineStore } from "pinia";
 export const useProjectStore = defineStore('project',{
     state: () => ({
         projectInfo:{},
-        projectDetails:false
     }),
     actions: {
         setUserInfo(data: any) {
@@ -14,5 +13,8 @@ export const useProjectStore = defineStore('project',{
             return this.projectInfo
         }
     },
-    
+    persist:{
+        key: 'project', //存储名称
+        storage: sessionStorage, // 存储方式
+    }
 })

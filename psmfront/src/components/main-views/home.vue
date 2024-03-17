@@ -2,7 +2,7 @@
     <div id="home">
         <el-container>
             <el-aside width="200px">
-                <el-menu default-active="2" class="el-menu-vertical" :collapse="isCollapse">
+                <el-menu :default-active="active" class="el-menu-vertical" :collapse="isCollapse">
 
                     <el-menu-item index="1" class="top">
                         <template #title>
@@ -101,7 +101,7 @@ const store = useUserStore()
 onBeforeMount(() => {
     userInfo.value = store.userInfo.data
 })
-
+const active = ref('1')
 
 
 const handle = () => {

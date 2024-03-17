@@ -34,9 +34,14 @@ public class LoginServiceImpl implements LoginService {
     PasswordEncoder passwordEncoder;
     @Override
     public  CommonResult<LoginUser> login(User user) {
-        QueryWrapper<User> query = new QueryWrapper<>();
-        query.eq("user_name",user.getUserName());
-        User user1 = userDao.selectOne(query);
+        User user1 = null;
+        try{
+            QueryWrapper<User> query = new QueryWrapper<>();
+            query.eq("user_name",user.getUserName());
+            user1 = userDao.selectOne(query);
+        }catch (Exception e){
+            return CommonResult.error(false,500,"数据库未连接",null);
+        }
         //获取用户名密码并封装为请求Authentication
         if(user1 == null){
             //返回用户不存在错误
@@ -58,13 +63,17 @@ public class LoginServiceImpl implements LoginService {
         //设置登录时间和失效时间
         loginUser.setLoginTime(String.valueOf(new Date()));
         loginUser.setExpireTime(String.valueOf(new Date(System.currentTimeMillis() + 24*60*60*1000)));
-        //将token和用户信息传到redis上
-        redisUtils.set("Token_"+loginUser.getUserName(),token);
-        redisUtils.set("UserDetails_"+loginUser.getUserName(),loginUser);
-        //设置失效时间
-        redisUtils.expire("Token_"+loginUser.getUserName(),24*60*60);
-        redisUtils.expire("UserDetails"+loginUser.getUserName(),24*60*60);
-        //将用户存入上下文中
+        try {
+            //将token和用户信息传到redis上
+            redisUtils.set("Token_"+loginUser.getUserName(),token);
+            redisUtils.set("UserDetails_"+loginUser.getUserName(),loginUser);
+            //设置失效时间
+            redisUtils.expire("Token_"+loginUser.getUserName(),24*60*60);
+            redisUtils.expire("UserDetails"+loginUser.getUserName(),24*60*60);
+            //将用户存入上下文中
+        }catch (Exception e){
+            return CommonResult.error(false,500,"redis未连接",null);
+        }
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         //返回成功消息
         return CommonResult.success(true,ResponseCode.SUCCESS.getCode(),
