@@ -69,8 +69,8 @@
 <script setup lang="ts">
 import showProject from '@/components/pages/project/showProject.vue'
 import eventBus from '@/utils/event';
-import { useProjectDetails } from '@/store/details';
-const detailStore = useProjectDetails()
+import { useDetailStore } from '@/store/details';
+const detailStore = useDetailStore()
 eventBus.on('projectDetails', (data) => {
     detailStore.projectDetails = data
 })

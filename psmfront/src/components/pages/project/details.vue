@@ -2,7 +2,7 @@
     <div class="myHeader">
         <span>
             <svg t="1710422761537" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                p-id="3493" width="30" height="30">
+                p-id="3493" width="30" height="30" @click="goDetails">
                 <path
                     d="M39.424 529.92v356.352c0 57.088 46.336 103.424 103.424 103.424h553.216c57.088 0 103.424-46.336 103.424-103.424V529.92H39.424zM696.064 211.2H142.848c-57.088 0-103.424 46.336-103.424 103.424V468.48h759.808v-153.856c0.256-57.088-46.336-103.424-103.168-103.424zM215.04 407.552c-18.688 0-33.792-15.104-33.792-33.792 0-18.688 15.104-33.792 33.792-33.792s33.792 15.104 33.792 33.792c0 18.432-15.104 33.792-33.792 33.792z m430.08-8.192H319.232c-15.616 0-28.16-12.544-28.16-28.16s12.544-28.16 28.16-28.16H645.12c15.616 0 28.16 12.544 28.16 28.16s-12.544 28.16-28.16 28.16z"
                     fill="#5396FF" p-id="3494"></path>
@@ -16,15 +16,16 @@
         </span>
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false">
             <el-menu-item index="1">
-                <router-link :to="`/home/project/details/${project.mark}/view`">
+                <router-link :to="`/home/project/details/${project.mark}/view`" style="display: block; height: 100%;">
                     概览
                 </router-link>
             </el-menu-item>
             <el-menu-item index="2">
-                <router-link :to="`/home/project/details/${project.mark}/demand`">
+                <router-link :to="`/home/project/details/${project.mark}/demand`" style="display: block; height: 100%;">
                     需求
                 </router-link>
             </el-menu-item>
+
             <el-menu-item index="3">设置</el-menu-item>
         </el-menu>
     </div>
@@ -34,12 +35,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref , onMounted} from 'vue';
+import { ref, onMounted } from 'vue';
 import eventBus from '@/utils/event';
 import { useProjectStore } from '@/store/project';
-onMounted(()=>{
-    project.value=projectStore.projectInfo
+import { useRouter } from 'vue-router';
+import { projectMain } from '@/utils/tools';
+onMounted(() => {
+    project.value = projectStore.projectInfo
+
 })
+const router = useRouter()
 const projectStore = useProjectStore()
 let project = ref<any>({
 })
@@ -48,12 +53,24 @@ eventBus.on('project', (data) => {
     projectStore.projectInfo = data
 })
 const activeIndex = ref('1')
-
+const goDetails = () => {
+    projectMain()
+    router.replace('/home/project')
+}
 </script>
 
 <style scoped lang="scss">
 @import url(../../../css/index.css);
-.el-menu-demo{
+
+.myHeader {
+    svg {
+        &:hover {
+            opacity: 0.5;
+        }
+    }
+}
+
+.el-menu-demo {
     height: 100%;
 }
 </style>

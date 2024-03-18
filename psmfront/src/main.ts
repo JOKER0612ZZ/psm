@@ -9,7 +9,7 @@ import zhCn from "element-plus/es/locale/lang/zh-cn";
 import store from './store'
 
 const app = createApp(App)
-app.use(ElementPlus, { locale: zhCn }).use(router).use(store).mount('#app')
+app.use(ElementPlus, { locale: zhCn }).use(store).use(router).mount('#app')
 
 //全局注册图标组件
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

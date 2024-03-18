@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-export const useProjectDetails = defineStore("details",{
+export const useDetailStore = defineStore("details",{
     state:()=>({
         projectDetails:false
     }),

@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-
-
+import { intercept } from './intercept'
 const routes: Array<RouteRecordRaw> = [
   {
     //路由初始指向
@@ -32,21 +31,25 @@ const routes: Array<RouteRecordRaw> = [
         path: 'project',
         name: 'project',
         component: () => import('@/components/pages/project.vue'),
-        children:[
+        children: [
           {
-            path:'details/:mark',
-            name:'details',
+            path: 'details/:mark',
+            name: 'details',
             component: () => import('@/components/pages/project/details.vue'),
-            children:[
+            redirect: to => {
+              const { params } = to
+              return { name: 'view', params }
+            },
+            children: [
               {
-                path:'view',
-                name:'view',
-                component:() =>import('@/components/details/view.vue')
+                path: 'view',
+                name: 'view',
+                component: () => import('@/components/details/view.vue')
               },
               {
-                path:'demand',
-                name:'demand',
-                component:()=>import('@/components/details/demand.vue')
+                path: 'demand',
+                name: 'demand',
+                component: () => import('@/components/details/demand.vue')
               }
             ]
           },
@@ -75,10 +78,9 @@ const routes: Array<RouteRecordRaw> = [
     ]
   }
 ]
-
 const router = createRouter({
   history: createWebHistory(),
   routes
 })
-
+intercept(router)
 export default router

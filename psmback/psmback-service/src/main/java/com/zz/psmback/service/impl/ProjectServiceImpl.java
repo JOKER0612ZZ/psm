@@ -3,6 +3,7 @@ package com.zz.psmback.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zz.psmback.common.entity.Project;
 import com.zz.psmback.common.entity.Team;
+import com.zz.psmback.common.entity.vo.ProjectDetails;
 import com.zz.psmback.common.result.CommonResult;
 import com.zz.psmback.common.utils.RedisUtils;
 import com.zz.psmback.dao.ProjectDao;
@@ -62,9 +63,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public CommonResult<?> queryUserProject(Integer userId) {
-        List<Project> projects;
+        List<ProjectDetails> projects;
         if(redisUtils.hasKey("Project_User_" + userId)){
-            projects = (List<Project>) redisUtils.Range("Project_User_"+userId);
+            projects = (List<ProjectDetails>) redisUtils.Range("Project_User_"+userId);
             log.info("从redis中取得:Project_User_"+userId);
         }else{
             try {

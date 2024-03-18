@@ -10,7 +10,7 @@
             <el-table-column prop="projectStatus" label="项目状态"/>
             <el-table-column prop="creationTime" label="创建时间"></el-table-column>
             <el-table-column prop="deadline" label="截止日期"></el-table-column>
-            <el-table-column prop="creatorId" label="负责人"></el-table-column>
+            <el-table-column prop="userName" label="负责人"></el-table-column>
         </el-table>
         <el-table :data="createProjects" style="width: 100%" @row-click="goProjectDetail" v-if="stepStore.currentStep===2">
             <el-table-column prop="projectName" label="项目名称" sortable />
@@ -48,7 +48,8 @@ interface Project{
     mark:string,
     projectId:string,
     projectName:string,
-    projectStatus:string
+    projectStatus:string,
+    userName:string
 }
 const projects = ref<Project[]>([])
 let createProjects = ref<Project[]>([])

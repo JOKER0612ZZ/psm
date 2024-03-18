@@ -86,12 +86,10 @@ import userRouter from '@/components/main-views/user.vue'
 import { ref, onBeforeMount } from 'vue'
 import { useUserStore } from '@/store/user'
 import eventBus from '@/utils/event';
+import { projectMain } from '@/utils/tools';
 eventBus.on('userInfo', (data) => {
     userInfo.value = data;
 })
-const projectMain = ()=>{
-    eventBus.emit('projectDetails',false)
-}
 let userInfo = ref({
     userName: '',
 })
