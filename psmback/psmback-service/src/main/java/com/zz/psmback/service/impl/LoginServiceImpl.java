@@ -89,7 +89,14 @@ public class LoginServiceImpl implements LoginService {
                     ResponseCode.USER_ACCOUNT_EXISTED.getMessage(),null);
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Integer result = userDao.insert(user);
+        int result;
+        try{
+            result = userDao.insert(user);
+            userDao.assignRole(user.getUserId(),1);
+        }catch (Exception e){
+            return CommonResult.error(false,500,"数据库错误",null);
+        }
+
         return CommonResult.success(true,ResponseCode.SUCCESS.getCode(),
                 ResponseCode.SUCCESS.getMessage(), null);
     }

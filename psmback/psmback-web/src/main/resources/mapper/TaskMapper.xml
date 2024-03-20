@@ -3,4 +3,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zz.psmback.dao.TaskDao">
 
+    <select id="queryTasksByProjectId" resultType="com.zz.psmback.common.entity.vo.TaskView">
+        select task_id, project_id, title, description, creation_time, deadline, creator_id, status,user_name
+        from task inner join user u on task.creator_id = u.user_id
+        where project_id = #{projectId}
+    </select>
 </mapper>

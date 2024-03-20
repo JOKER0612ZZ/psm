@@ -82,5 +82,5 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
-intercept(router)
+// intercept(router)
 export default router

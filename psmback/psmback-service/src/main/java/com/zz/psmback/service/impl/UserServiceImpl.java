@@ -2,9 +2,11 @@ package com.zz.psmback.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.zz.psmback.common.entity.LoginUser;
 import com.zz.psmback.common.entity.User;
 import com.zz.psmback.common.result.CommonResult;
 import com.zz.psmback.common.result.ResponseCode;
+import com.zz.psmback.common.utils.RedisUtils;
 import com.zz.psmback.dao.UserDao;
 import com.zz.psmback.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ public class UserServiceImpl implements UserService {
     UserDao userDao;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    RedisUtils redisUtils;
     @Override
     public User queryUserByUserId(Integer userId) {
         QueryWrapper<User> query = new QueryWrapper<>();
@@ -47,6 +51,7 @@ public class UserServiceImpl implements UserService {
         if(userDao.update(null, warp)==0) {
             return CommonResult.error(false,2033,"更改出错",null);
         }
+
         return CommonResult.success(true,1032,"更改完成",queryUserByUserId(userId));
     }
 
@@ -81,5 +86,13 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(password);
         return CommonResult.success(true,1034,"密码更改成功",user);
+    }
+
+    public LoginUser loadUser(String username){
+        try {
+            return (LoginUser) redisUtils.get("UserDetails_"+username);
+        }catch (Exception e){
+            return null;
+        }
     }
 }

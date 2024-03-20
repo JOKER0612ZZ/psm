@@ -1,22 +1,27 @@
 package com.zz.psmback.common.entity;
 
-import com.zz.psmback.common.entity.User;
+import com.zz.psmback.common.entity.vo.ProjectAuthorities;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class LoginUser extends User implements UserDetails {
     private String token;
     private String loginTime;
     private String expireTime;
-
+    private List<SimpleGrantedAuthority> authorities;
+    private List<ProjectAuthorities> projectAuthorities;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return authorities;
     }
     @Override
     public String getPassword() {
@@ -46,13 +51,16 @@ public class LoginUser extends User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
     @Override
     public String toString() {
-        return "LoginUser{" + super.toString() +
+        return "LoginUser{" +
                 "token='" + token + '\'' +
                 ", loginTime='" + loginTime + '\'' +
                 ", expireTime='" + expireTime + '\'' +
-                "} " + super.toString();
+                ", authorities=" + authorities +
+                ", projectAuthorities=" + projectAuthorities +
+                '}'+super.toString();
     }
 }
 

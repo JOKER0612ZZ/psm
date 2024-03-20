@@ -25,10 +25,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref,onBeforeMount } from 'vue';
 import eventBus from '@/utils/event';
 import { useProjectStore } from '@/store/project';
-onMounted(() => {
+onBeforeMount(() => {
     project.value = projectStore.projectInfo
 })
 const projectStore = useProjectStore()

@@ -1,10 +1,12 @@
 package com.zz.psmback.web;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.zz.psmback.common.entity.LoginUser;
 import com.zz.psmback.common.entity.User;
 import com.zz.psmback.common.result.CommonResult;
 import com.zz.psmback.common.utils.JwtUtils;
 import com.zz.psmback.common.utils.RedisUtils;
+import com.zz.psmback.dao.UserDao;
 import com.zz.psmback.service.ProjectService;
 import com.zz.psmback.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +30,7 @@ class PsmbackWebApplicationTests {
     @Autowired
     private RedisTemplate<String,Object> redistemplate;
     @Autowired
-    private PasswordEncoder PasswordEncoder;
+    private PasswordEncoder passwordEncoder;
     @Autowired
     AuthenticationManager  authenticationManager;
     @Autowired
@@ -39,6 +41,8 @@ class PsmbackWebApplicationTests {
     UserService userService;
     @Autowired
     RedisUtils redisUtils;
+    @Autowired
+    UserDao userDao;
     @Test
     void contextLoads() {
 //        log.info("User_"+userService.queryUserByUserId(6));
@@ -46,7 +50,11 @@ class PsmbackWebApplicationTests {
 //        log.info("User_"+userService.updateEmailById(6,"6666"));
 //        log.info("User_"+userService.updateUserNameById(6,"zouzan"));
 //        log.info("User_"+userService.updateUserNameById(6,"admin"));
-        redisUtils.delete("Project_User_"+1);
+        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+        String password= passwordEncoder.encode("123456");
+        wrapper.set("password",password).eq("user_id",5);
+        userDao.update(null,wrapper);
+
     }
 
 //    @Test

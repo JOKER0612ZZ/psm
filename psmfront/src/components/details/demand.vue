@@ -8,7 +8,7 @@
             </el-menu>
         </el-header>
         <el-main>
-            <el-table :data="tableData"  border style="width: 100%">
+            <el-table :data="tableData" border style="width: 100%">
                 <el-table-column type="index" width="50" />
                 <el-table-column prop="date" label="Date" width="180" />
                 <el-table-column prop="name" label="Name" width="180" />
@@ -21,6 +21,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 const menuIndex = ref('1')
+const taskList = ref<any>([])
+
 const tableData: any[] = [
   {
     date: '2016-05-03',

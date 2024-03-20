@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import create from './create.vue'
-import { ref,onMounted } from 'vue';
+import { ref,onMounted ,onBeforeMount} from 'vue';
 import { queryUserProject } from '@/api/project';
 import { useUserStore } from '@/store/user';
 import { useStepStore } from '@/store/step';
@@ -51,14 +51,14 @@ interface Project{
     projectStatus:string,
     userName:string
 }
-const projects = ref<Project[]>([])
+let projects = ref<Project[]>([])
 let createProjects = ref<Project[]>([])
 let joinProjects = ref<Project[]>([])
 eventBus.on('step', (data) => {
     stepStore.currentStep = data;
 });
-onMounted(async ()=>{
-    projects.value= await queryUserProject(userStore.userInfo.data.userId)
+onBeforeMount(async()=>{
+    projects.value=  await queryUserProject(userStore.userInfo.data.userId)
     createProjects.value = projects.value.filter(project => project.creatorId === userStore.userInfo.data.userId)
     joinProjects.value = projects.value.filter(project => project.creatorId !== userStore.userInfo.data.userId)
     console.log(projects.value)
@@ -99,4 +99,4 @@ const goProjectDetail = (row:any) =>{
     }
 }
 
-</style>(: { creatorId: string; })(: { creatorId: string; })
+</style>

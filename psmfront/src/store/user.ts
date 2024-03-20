@@ -8,7 +8,12 @@ export const useUserStore = defineStore('user', {
             data: {
                 token: '',
                 userName:'',
-                userId:''
+                username:'',
+                userId:'',
+                gender:'',
+                password:'',
+                nickname:''
+
             },
             message: '',
             success: false

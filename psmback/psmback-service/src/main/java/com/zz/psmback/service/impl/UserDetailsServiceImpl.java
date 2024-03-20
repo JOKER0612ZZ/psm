@@ -1,16 +1,25 @@
 package com.zz.psmback.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.zz.psmback.common.entity.Authority;
 import com.zz.psmback.common.entity.LoginUser;
 import com.zz.psmback.common.entity.User;
+import com.zz.psmback.common.entity.vo.ProjectAuthorities;
 import com.zz.psmback.dao.UserDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -29,6 +38,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         LoginUser loginUser = new LoginUser();
         BeanUtils.copyProperties(user, loginUser);
+        List<ProjectAuthorities> projectAuthorities = userDao.queryProAuthorities(loginUser.getUserId());
+        List<Authority> authorities = userDao.queryUserAuthorities(loginUser.getUserId());
+        loginUser.setProjectAuthorities(projectAuthorities);
+        loginUser.setAuthorities(authorities.stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
+                .collect(Collectors.toList()));
+        log.info("authorities: "+authorities+"");
         return loginUser;
     }
 }

@@ -3,8 +3,10 @@ package com.zz.psmback.web.controller;
 import com.zz.psmback.common.entity.User;
 import com.zz.psmback.common.result.CommonResult;
 import com.zz.psmback.common.result.ResponseCode;
+import com.zz.psmback.common.utils.psmAnnotation.AuthProject;
 import com.zz.psmback.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,6 +28,7 @@ public class UserController {
     public CommonResult<?> updateUserNameById(@PathVariable("userId") Integer userId, @PathVariable("userName") String userName) {
         return userService.updateUserNameById(userId,userName);
     }
+
     @RequestMapping(value = "/updateEmailById/{userId}/{email}",method = RequestMethod.GET)
     public CommonResult<?> updateEmailById(@PathVariable("userId") Integer userId, @PathVariable("email") String email) {
         return userService.updateEmailById(userId,email);
@@ -34,5 +37,11 @@ public class UserController {
     public CommonResult<?> updatePasswordById(@PathVariable("userId") Integer userId,@
             PathVariable("oldPassword") String oldPassword, @PathVariable("newPassword") String newPassword) {
         return userService.updatePasswordById(userId,oldPassword,newPassword);
+    }
+
+    @RequestMapping(value="/auth/{userId}/{projectId}" ,method = RequestMethod.GET)
+    @AuthProject("update:project")
+    public CommonResult<?> auth(@PathVariable("userId") int userId,@PathVariable int projectId){
+        return CommonResult.success(true,111,"成功响应",null);
     }
 }

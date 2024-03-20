@@ -15,6 +15,8 @@ public enum ResponseCode {
     USER_ACCOUNT_NOT_EXIST(1003,"用户名不存在"),
     USERNAME_PASSWORD_ERROR(1004,"用户名或密码错误"),
     PASSWORD_ERROR(1005,"密码错误"),
+    SELECT_ERROR(1006,"查询出错"),
+    SELECT_SUCCESS(1007,"查询成功"),
 //    USER_ACCOUNT_EXPIRED(1006,"账号过期"),
 //    USER_PASSWORD_EXPIRED(1007,"密码过期"),
     USER_ACCOUNT_DISABLE(1008,"账号不可用"),
