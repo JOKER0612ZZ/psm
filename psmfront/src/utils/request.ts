@@ -45,10 +45,9 @@ service.interceptors.response.use(
          * 请返回response => response
         */
         const res = response.data;
-        console.log(response)
-        if (response.status == 200 && res.success&&res.code!==3002) {
+        if (response.status == 200 && res.success&&res.code!==1007) {
             ElMessage.success(res.message)
-        }else if(res.code==3002){
+        }else if(res.code==1007){
            return res; 
         }else{
             ElMessage.error(res.message)

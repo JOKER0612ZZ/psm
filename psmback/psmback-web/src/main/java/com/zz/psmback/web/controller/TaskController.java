@@ -15,9 +15,11 @@ public class TaskController {
     TaskService taskService;
 
     @AuthProject("select:task")
-    @RequestMapping(value = "/queryTasksByProjectId/{projectId}", method = RequestMethod.GET)
-    public CommonResult<?> queryTasksByProjectId(@PathVariable("projectId") int projectId) {
-        return taskService.queryTasksByProjectId(projectId);
+    @RequestMapping(value = "/queryTasksByProjectId/{projectId}/{pageNum}/{pageSize}", method = RequestMethod.GET)
+    public CommonResult<?> queryTasksByProjectId(@PathVariable("projectId") int projectId,
+                                                 @PathVariable("pageNum") int pageNum,
+                                                 @PathVariable("pageSize") int pageSize) {
+        return taskService.queryTasksByProjectId(projectId,pageNum,pageSize);
     }
 
 }

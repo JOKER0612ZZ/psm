@@ -1,19 +1,19 @@
 
 import { defineStore } from "pinia";
-
-export const useProjectStore = defineStore('project',{
+import { Project } from "@/api/interface"
+export const useProjectStore = defineStore('project', {
     state: () => ({
-        projectInfo:{},
+        projectInfo: null as Project | null,
     }),
     actions: {
-        setUserInfo(data: any) {
+        setProjectInfo(data: any) {
             this.projectInfo = data
         },
-        getUserInfo():any  {
+        getProjectInfo(): any {
             return this.projectInfo
         }
     },
-    persist:{
+    persist: {
         key: 'project', //存储名称
         storage: sessionStorage, // 存储方式
     }

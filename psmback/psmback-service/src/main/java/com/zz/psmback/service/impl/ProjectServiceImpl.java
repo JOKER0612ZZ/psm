@@ -5,6 +5,7 @@ import com.zz.psmback.common.entity.Project;
 import com.zz.psmback.common.entity.Team;
 import com.zz.psmback.common.entity.vo.ProjectDetails;
 import com.zz.psmback.common.result.CommonResult;
+import com.zz.psmback.common.result.ResponseCode;
 import com.zz.psmback.common.utils.RedisUtils;
 import com.zz.psmback.dao.ProjectDao;
 import com.zz.psmback.dao.TeamDao;
@@ -74,9 +75,9 @@ public class ProjectServiceImpl implements ProjectService {
                 redisUtils.lPush("Project_User_" + userId, projects);
                 redisUtils.expire("Project_User_"+userId,60*60*24);
             }catch (Exception e){
-                return CommonResult.error(false, 3013,e.getMessage(),null);
+                return CommonResult.error(false, ResponseCode.SELECT_ERROR.getCode(),e.getMessage(),null);
             }
         }
-        return CommonResult.success(true,3002,"查询成功",projects);
+        return CommonResult.success(true, ResponseCode.SELECT_SUCCESS.getCode(), ResponseCode.SELECT_SUCCESS.getMessage(), projects);
     }
 }

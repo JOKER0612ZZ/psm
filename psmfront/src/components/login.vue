@@ -75,11 +75,7 @@ const rules = reactive<FormRules<typeof loginForm>>({
     userName: [{ validator: validateName, trigger: 'blur' }],
     password: [{ validator: validatePass, trigger: 'blur' }],
 })
-document.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-        goLogin()
-    }
-});
+
 const goLogin = () => {
     if (loginForm.password !== '' && loginForm.userName !== '') {
         login(loginForm)

@@ -35,14 +35,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 import eventBus from '@/utils/event';
 import { useProjectStore } from '@/store/project';
 import { useRouter } from 'vue-router';
 import { projectMain } from '@/utils/tools';
-onMounted(() => {
+onBeforeMount(() => {
     project.value = projectStore.projectInfo
-
 })
 const router = useRouter()
 const projectStore = useProjectStore()

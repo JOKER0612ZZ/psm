@@ -31,26 +31,19 @@
 
 <script setup lang="ts">
 import create from './create.vue'
-import { ref,onMounted ,onBeforeMount} from 'vue';
+import { ref ,onBeforeMount} from 'vue';
 import { queryUserProject } from '@/api/project';
 import { useUserStore } from '@/store/user';
 import { useStepStore } from '@/store/step';
+import { useProjectStore } from '@/store/project';
 import eventBus from '@/utils/event';
-import { useRouter } from "vue-router"
+import { useRouter } from "vue-router";
+import {Project} from "@/api/interface"
 const router = useRouter()
 const userStore = useUserStore()
 const stepStore = useStepStore()
-interface Project{
-    creationTime:string,
-    creatorId:string,
-    deadline:string,
-    description:string,
-    mark:string,
-    projectId:string,
-    projectName:string,
-    projectStatus:string,
-    userName:string
-}
+const projectStore = useProjectStore();
+
 let projects = ref<Project[]>([])
 let createProjects = ref<Project[]>([])
 let joinProjects = ref<Project[]>([])
@@ -64,24 +57,11 @@ onBeforeMount(async()=>{
     console.log(projects.value)
 })
 const goProjectDetail = (row:any) =>{
-    eventBus.emit('project',row)
-    console.log(row)
+    projectStore.setProjectInfo(row)
     eventBus.emit('projectDetails',true)
     router.push(`/home/project/details/${row.mark}`)
 }
 
-// filterNotmetchant(){
-//             if(this.userInfo.userType=="商家"){
-//                 let list =this.productInfoList.filter(product=>product.userId !== this.userInfo.userId)
-
-//                 this.productInfoList=list
-//             }else if(this.userInfo.userType=="普通用户"){
-
-//                 let list =this.productInfoList.filter(product=>product.productStatus ==1)
-                
-//                 this.productInfoList=list
-
-//             }
 </script>
 
 

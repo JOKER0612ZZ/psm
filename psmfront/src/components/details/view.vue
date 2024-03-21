@@ -25,19 +25,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref,onBeforeMount } from 'vue';
-import eventBus from '@/utils/event';
+import { ref,onBeforeMount} from 'vue';
 import { useProjectStore } from '@/store/project';
-onBeforeMount(() => {
-    project.value = projectStore.projectInfo
-})
 const projectStore = useProjectStore()
+onBeforeMount(()=>{
+    project.value= projectStore.projectInfo
+})
 let project = ref<any>({
 })
 
-eventBus.on('project', (data) => {
-    projectStore.projectInfo = data
-})
 </script>
 
 <style scoped lang="scss">
@@ -48,13 +44,13 @@ eventBus.on('project', (data) => {
     background-color: #fafafa;
     width: 100%;
     height: 100%;
-    
+
     overflow: auto;
     justify-content: space-evenly;
 }
 
 .basic_info {
-    
+
     position: relative;
     border-radius: 2px;
     outline: 1px solid #eee;
@@ -74,7 +70,7 @@ eventBus.on('project', (data) => {
 .basic_ava {
     margin-right: 5px;
     font-size: 12px;
-    background-color: rgba(83, 150, 255,0.7);
+    background-color: rgba(83, 150, 255, 0.7);
 }
 
 .basic_pannel {
