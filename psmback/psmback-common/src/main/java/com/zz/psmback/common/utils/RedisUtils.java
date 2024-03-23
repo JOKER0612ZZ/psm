@@ -31,8 +31,8 @@ public class RedisUtils {
             return true;
         }catch (Exception e){
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
     /**
      * 是否有key

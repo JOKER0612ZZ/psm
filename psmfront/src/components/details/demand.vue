@@ -2,16 +2,16 @@
     <div class="demand">
         <el-header>
             <el-menu :default-active="menuIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false">
-                <el-menu-item index="1">全部需求</el-menu-item>
-                <el-menu-item index="2">我负责的需求</el-menu-item>
-                <el-menu-item index="3">我创建的需求</el-menu-item>
+                <el-menu-item index="1" @click="selectOne">全部需求</el-menu-item>
+                <el-menu-item index="2" @click="selectTwo">我负责的需求</el-menu-item>
+                <el-menu-item index="3" @click="selectThree">我创建的需求</el-menu-item>
             </el-menu>
         </el-header>
         <el-main>
-            <el-table :data="taskList" border style="width: 100%">
-                <el-table-column type="index" width="50" />
-                <el-table-column prop="title" label="标题" width="180" />
-                <el-table-column prop="assignName" label="负责人" width="180" />
+            <el-table :data="tabledata" border style="width: 100%">
+                <el-table-column type="index" fixed width="50" />
+                <el-table-column prop="title" fixed  label="标题" width="150" />
+                <el-table-column prop="assignName" label="负责人" width="150" />
                 <el-table-column prop="status" label="状态"></el-table-column>
                 <el-table-column prop="description" label="描述" />
                 <el-table-column prop="creationTime" label="创建时间"></el-table-column>
@@ -32,8 +32,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { queryTasksByProjectId } from '@/api/task'
-import { useProjectStore } from '@/store/project';
+import { useProjectStore } from '@/store/project'
 import { Task } from '@/api/interface'
+import { useUserStore } from '@/store/user'
+const userStore = useUserStore()
 const projectStore = useProjectStore()
 const pageSize: number = 25
 const paginationData = ref({
@@ -42,6 +44,7 @@ const paginationData = ref({
     // 当前页
     currentPage: 1,
 })
+const selector = ref(1)
 onMounted(() => {
     loadTasks()
 })
@@ -54,10 +57,44 @@ const loadTasks = async () => {
     paginationData.value.pageCount = Math.ceil(total / pageSize)
     taskList.value = taskViews
     totalSize.value = total
+    taskMyAssign.value = taskList.value.filter(task => task.assignName === userStore.userInfo.data.userName)
+    taskMycreate.value = taskList.value.filter(task => task.creatorId === userStore.userInfo.data.userId)
+    lodaTableData()
+}
+const selectOne = () => {
+    selector.value = 1
+    lodaTableData()
+}
+const selectTwo = () =>{
+    selector.value =2
+    lodaTableData()
+}
+const selectThree = () =>{
+    selector.value =3
+    lodaTableData()
+}
+const lodaTableData = () => {
+    switch (selector.value) {
+        case 1:
+            tabledata.value = taskList.value
+            break;
+        case 2:
+            tabledata.value = taskMyAssign.value
+            break;
+        case 3:
+            tabledata.value = taskMycreate.value
+            break;
+        default:
+            break;
+    }
+
 }
 const menuIndex = ref('1')
 
 const taskList = ref<Task[]>([])
+const taskMyAssign = ref<Task[]>([])
+const taskMycreate = ref<Task[]>([])
+const tabledata = ref<Task[]>([])
 const totalSize = ref<number>()
 
 </script>

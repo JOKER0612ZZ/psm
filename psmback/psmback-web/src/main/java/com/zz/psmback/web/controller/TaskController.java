@@ -1,5 +1,6 @@
 package com.zz.psmback.web.controller;
 
+import com.zz.psmback.common.entity.vo.TaskView;
 import com.zz.psmback.common.result.CommonResult;
 import com.zz.psmback.common.utils.psmAnnotation.AuthProject;
 import com.zz.psmback.service.TaskService;
@@ -22,4 +23,14 @@ public class TaskController {
         return taskService.queryTasksByProjectId(projectId,pageNum,pageSize);
     }
 
+    @AuthProject("update:task")
+    @RequestMapping(value = "/updateTask/{pageNum}/{pageSize}", method = RequestMethod.POST)
+    public CommonResult<?> updateTask(@RequestBody TaskView taskView) {
+        return taskService.updateTask(taskView);
+    }
+    @AuthProject("insert:task")
+    @RequestMapping(value = "/insertTask", method = RequestMethod.PUT)
+    public CommonResult<?> insertTask(@RequestBody TaskView taskView) {
+        return taskService.insertTask(taskView);
+    }
 }

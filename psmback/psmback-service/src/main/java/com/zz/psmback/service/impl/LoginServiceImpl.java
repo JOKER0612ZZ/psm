@@ -18,6 +18,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Date;
 
@@ -81,19 +83,26 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CommonResult<?> register(User user) {
         QueryWrapper<User> query = new QueryWrapper<>();
-        if(userDao.selectOne(query.eq("user_Name",user.getUserName()))!=null) {
-            //返回用户已存在错误
-            return CommonResult.error(false,ResponseCode.USER_ACCOUNT_EXISTED.getCode(),
-                    ResponseCode.USER_ACCOUNT_EXISTED.getMessage(),null);
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        int result;
         try{
-            result = userDao.insert(user);
-            userDao.assignRole(user.getUserId(),1);
+            User checkUser = userDao.selectOne(query.eq("user_Name",user.getUserName()));
+            User checkEmail = userDao.selectOne(query.eq("email",user.getEmail()));
+            if(checkUser!=null) {
+                //返回用户已存在错误
+                return CommonResult.error(false,ResponseCode.USER_ACCOUNT_EXISTED.getCode(),
+                        ResponseCode.USER_ACCOUNT_EXISTED.getMessage(),null);
+            }else if(checkEmail!=null) {
+                return CommonResult.error(false,ResponseCode.USER_ACCOUNT_EXISTED.getCode(),
+                        "该邮箱号已被注册",null);
+            }
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userDao.insert(user);
+            User userRegister = userDao.selectOne(query.eq("user_Name",user.getUserName()));
+            userDao.assignRole(userRegister.getUserId(),1);
         }catch (Exception e){
+            e.printStackTrace();
             return CommonResult.error(false,500,"数据库错误",null);
         }
 
@@ -105,10 +114,14 @@ public class LoginServiceImpl implements LoginService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         String username = loginUser.getUsername();
-        log.info("Authentication"+username);
         //删除redis中存的信息
-        redisUtils.delete("Token_" + username);
-        redisUtils.delete("UserDetails_" + username);
+        try{
+            redisUtils.delete("Token_" + username);
+            redisUtils.delete("UserDetails_" + username);
+        }catch (Exception e){
+            e.printStackTrace();
+            return CommonResult.error(false,500,"redis未连接",null);
+        }
         //清除上下文
         SecurityContextHolder.clearContext();
         return CommonResult.success(true,ResponseCode.SUCCESS.getCode(),

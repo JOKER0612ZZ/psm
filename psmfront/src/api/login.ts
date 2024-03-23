@@ -8,7 +8,7 @@ export const login = (data: any) => {
         password:data.password
     }).then(res => {
         if (res.success == true) {
-            store.setUserInfo(res)
+            store.setUserInfo(res.data)
             window.sessionStorage.setItem("token", res.data.token)
             router.replace('/home')
         }

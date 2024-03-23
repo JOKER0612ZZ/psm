@@ -10,5 +10,5 @@ import java.util.List;
 
 @Mapper
 public interface TaskDao extends BaseMapper<Task> {
-    Page<TaskView> queryTasksByProjectId(Page<?> page, int projectId);
+    List<TaskView> queryTasksByProjectId(int projectId);
 }

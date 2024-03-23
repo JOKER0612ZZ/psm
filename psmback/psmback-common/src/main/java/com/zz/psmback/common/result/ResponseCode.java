@@ -17,6 +17,13 @@ public enum ResponseCode {
     PASSWORD_ERROR(1005,"密码错误"),
     SELECT_ERROR(1006,"查询出错"),
     SELECT_SUCCESS(1007,"查询成功"),
+    UPDATE_SUCCESS(1008,"更新成功"),
+    UPDATE_ERROR(1009,"更新出错"),
+    INSERT_SUCCESS(1010,"添加成功"),
+    INSERT_ERROR(1011,"添加出错"),
+    DELETE_SUCCESS(1012,"删除成功"),
+    DELETE_ERROR(1013,"删除出错"),
+//    USER_ACCOUNT_EXPIRED(1006,"账号过期")
 //    USER_ACCOUNT_EXPIRED(1006,"账号过期"),
 //    USER_PASSWORD_EXPIRED(1007,"密码过期"),
     USER_ACCOUNT_DISABLE(1008,"账号不可用"),

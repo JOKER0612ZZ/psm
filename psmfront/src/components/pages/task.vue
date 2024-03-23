@@ -14,12 +14,26 @@
         </span>
     </div>
     <div class="myBody">
-        <div class="aside"></div>
-        <div class="main"></div>
-    </div>
+            <div class="aside">
+                <span>任务</span>
+                <div class="aside_menu">
+                    <a >全部任务</a>
+                    <a >我负责的任务</a>
+                    <a >我创建的任务</a>
+                </div>
+            </div>
+            <div class="main">
+                <task-view :title="title" :taskList="taskList"></task-view>
+            </div>
+        </div>
 </template>
 
 <script setup lang="ts">
+import {ref} from 'vue'
+import { Task } from '@/api/interface';
+import taskView from '@/components/pages/task/taskView.vue'
+const title = ref('全部任务')
+const taskList  = ref<Task[]>([])
 </script>
 
 <style scoped lang="scss">

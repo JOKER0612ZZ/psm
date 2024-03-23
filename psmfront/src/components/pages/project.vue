@@ -57,7 +57,7 @@
                 </div>
             </div>
             <div class="main">
-                <show-project></show-project>
+                <project-view :title="title" :page="page"></project-view >
             </div>
         </div>
     </div>
@@ -67,21 +67,27 @@
 </template>
 
 <script setup lang="ts">
-import showProject from '@/components/pages/project/showProject.vue'
-import eventBus from '@/utils/event';
-import { useDetailStore } from '@/store/details';
+import projectView from '@/components/pages/project/projectView.vue'
+import eventBus from '@/utils/event'
+import { useDetailStore } from '@/store/details'
+import {ref} from 'vue'
 const detailStore = useDetailStore()
 eventBus.on('projectDetails', (data) => {
     detailStore.projectDetails = data
 })
+const title = ref('全部项目')
+const page = ref(1)
 const pageOne = () => {
-    eventBus.emit("step", 1)
+    page.value=1
+    title.value='全部项目'
 }
 const pageTwo = () => {
-    eventBus.emit("step", 2)
+    page.value=2
+    title.value='我创建的项目'
 }
 const pageThree = () => {
-    eventBus.emit("step", 3)
+    page.value=3
+    title.value='我加入的项目'
 }
 
 </script>

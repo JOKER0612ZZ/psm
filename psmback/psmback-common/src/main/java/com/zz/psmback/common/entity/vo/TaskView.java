@@ -9,4 +9,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class TaskView extends Task {
     private String userName;
+    private String assignName;
 }

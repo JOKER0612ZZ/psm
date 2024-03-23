@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { intercept } from './intercept'
+// import { intercept } from './intercept'
 const routes: Array<RouteRecordRaw> = [
   {
     //路由初始指向

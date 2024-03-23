@@ -16,16 +16,19 @@ public class LoginController {
 
     @Autowired
     LoginService loginService;
+
     @PostMapping("/login")
-    public CommonResult<LoginUser> login(@RequestBody User user){
+    public CommonResult<LoginUser> login(@RequestBody User user) {
         return loginService.login(user);
     }
+
     @RequestMapping("/register")
     public CommonResult<?> register(@RequestBody User user) {
         return loginService.register(user);
     }
-    @RequestMapping(value = "/logout",method = RequestMethod.GET)
-    public CommonResult<?> logout(){
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public CommonResult<?> logout() {
         return loginService.logout();
     }
 }

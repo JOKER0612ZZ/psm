@@ -4,7 +4,6 @@ import { defineStore } from "pinia";
 export const useUserStore = defineStore('user', {
     state: () => ({
         userInfo: {
-            code: 500,
             data: {
                 token: '',
                 userName:'',
@@ -15,8 +14,6 @@ export const useUserStore = defineStore('user', {
                 nickname:''
 
             },
-            message: '',
-            success: false
         }
     }),
     actions: {

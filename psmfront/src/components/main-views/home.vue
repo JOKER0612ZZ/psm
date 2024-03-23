@@ -73,7 +73,7 @@
                 </el-menu>
             </el-aside>
             <el-main>
-                <user-router></user-router>
+                <user-router :user-info="userInfo"></user-router>
                 <router-view>
                 </router-view>
             </el-main>
