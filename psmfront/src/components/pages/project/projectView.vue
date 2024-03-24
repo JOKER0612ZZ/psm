@@ -55,9 +55,9 @@ let projects = ref<Project[]>([])
 let createProjects = ref<Project[]>([])
 let joinProjects = ref<Project[]>([])
 onBeforeMount(async()=>{
-    projects.value=  await queryUserProject(userStore.userInfo.data.userId)
-    createProjects.value = projects.value.filter(project => project.creatorId === userStore.userInfo.data.userId)
-    joinProjects.value = projects.value.filter(project => project.creatorId !== userStore.userInfo.data.userId)
+    projects.value=  await queryUserProject(userStore.userInfo.userId)
+    createProjects.value = projects.value.filter(project => project.creatorId === userStore.userInfo.userId)
+    joinProjects.value = projects.value.filter(project => project.creatorId !== userStore.userInfo.userId)
     console.log(projects.value)
 })
 const goProjectDetail = (row:any) =>{

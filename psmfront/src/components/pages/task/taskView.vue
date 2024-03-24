@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import {ref} from 'vue'
 import { Task } from '@/api/interface'
 defineProps({
     title: {
@@ -22,7 +22,7 @@ defineProps({
         require: true
     }
 })
-
+const title = ref('全部任务')
 </script>
 
 <style scoped lang="scss">

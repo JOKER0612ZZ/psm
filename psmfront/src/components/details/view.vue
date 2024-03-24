@@ -12,10 +12,10 @@
                         {{ project.projectStatus }}
                     </el-form-item>
                     <el-form-item label="创建时间">
-                        <el-input v-model="project.creationTime" readonly></el-input>
+                        <el-date-picker v-model="project.creationTime" type="datetime"></el-date-picker>
                     </el-form-item>
                     <el-form-item label="截止时间">
-                        <el-input v-model="project.deadline" readonly></el-input>
+                        <el-date-picker v-model="project.deadline" type="datetime"></el-date-picker>
                     </el-form-item>
                 </el-form>
             </div>
@@ -85,7 +85,7 @@ let project = ref<any>({
             padding-right: 0;
             margin-bottom: 15px;
             width: 45%;
-
+            overflow: hidden;
             :deep(.el-input) {
                 box-shadow: 0 0 0 0;
             }

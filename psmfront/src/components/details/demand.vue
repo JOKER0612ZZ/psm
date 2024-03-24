@@ -1,23 +1,31 @@
 <template>
+
     <div class="demand">
         <el-header>
             <el-menu :default-active="menuIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false">
                 <el-menu-item index="1" @click="selectOne">全部需求</el-menu-item>
                 <el-menu-item index="2" @click="selectTwo">我负责的需求</el-menu-item>
                 <el-menu-item index="3" @click="selectThree">我创建的需求</el-menu-item>
+
+
             </el-menu>
         </el-header>
         <el-main>
             <el-table :data="tabledata" border style="width: 100%">
-                <el-table-column type="index" fixed width="50" />
-                <el-table-column prop="title" fixed  label="标题" width="150" />
-                <el-table-column prop="assignName" label="负责人" width="150" />
-                <el-table-column prop="status" label="状态"></el-table-column>
-                <el-table-column prop="description" label="描述" />
-                <el-table-column prop="creationTime" label="创建时间"></el-table-column>
-                <el-table-column prop="deadline" label="截止时间"></el-table-column>
-                <el-table-column prop="userName" label="创建者"></el-table-column>
+                <el-table-column type="index" fixed width="50" align="center" />
+                <el-table-column prop="title" fixed label="标题" width="150" align="center" />
+                <el-table-column prop="assignName" label="负责人" width="150" align="center" />
+                <el-table-column prop="status" label="状态" width="100" align="center" />
+                <el-table-column prop="description" label="描述" width="150" align="center" />
+                <el-table-column prop="creationTime" label="创建时间" width="200" align="center" />
+                <el-table-column prop="deadline" label="截止时间" width="200" align="center" />
+                <el-table-column prop="userName" label="创建者" width="100" align="center" />
+                <el-table-column align="center" label="操作" #default="scope">
+                    <el-button type="primary" @click="open(scope.row)">编辑</el-button>
+
+                </el-table-column>
             </el-table>
+            <task-update></task-update>
         </el-main>
         <el-footer>
             <el-text>共{{ totalSize }}条</el-text>
@@ -35,6 +43,9 @@ import { queryTasksByProjectId } from '@/api/task'
 import { useProjectStore } from '@/store/project'
 import { Task } from '@/api/interface'
 import { useUserStore } from '@/store/user'
+import eventBus from '@/utils/event';
+import taskUpdate from '@/components/pages/task/taskUpdate.vue'
+import { hasProjectAuthority } from '@/utils/hasAuthority'
 const userStore = useUserStore()
 const projectStore = useProjectStore()
 const pageSize: number = 25
@@ -45,6 +56,7 @@ const paginationData = ref({
     currentPage: 1,
 })
 const selector = ref(1)
+let projectId:string
 onMounted(() => {
     loadTasks()
 })
@@ -54,23 +66,26 @@ const currentPageChange = async (val: number) => {
 }
 const loadTasks = async () => {
     const { taskViews, total } = await queryTasksByProjectId(projectStore.projectInfo!.projectId, paginationData.value.currentPage, pageSize)
-    paginationData.value.pageCount = Math.ceil(total / pageSize)
-    taskList.value = taskViews
-    totalSize.value = total
-    taskMyAssign.value = taskList.value.filter(task => task.assignName === userStore.userInfo.data.userName)
-    taskMycreate.value = taskList.value.filter(task => task.creatorId === userStore.userInfo.data.userId)
+    if (taskViews != null) {
+        paginationData.value.pageCount = Math.ceil(total / pageSize)
+        taskList.value = taskViews
+        totalSize.value = total
+        taskMyAssign.value = taskList.value.filter(task => task.assignName === userStore.userInfo.userName)
+        taskMycreate.value = taskList.value.filter(task => task.creatorId === userStore.userInfo.userId)
+        projectId = taskViews[0].projectId
+    }
     lodaTableData()
 }
 const selectOne = () => {
     selector.value = 1
     lodaTableData()
 }
-const selectTwo = () =>{
-    selector.value =2
+const selectTwo = () => {
+    selector.value = 2
     lodaTableData()
 }
-const selectThree = () =>{
-    selector.value =3
+const selectThree = () => {
+    selector.value = 3
     lodaTableData()
 }
 const lodaTableData = () => {
@@ -96,7 +111,15 @@ const taskMyAssign = ref<Task[]>([])
 const taskMycreate = ref<Task[]>([])
 const tabledata = ref<Task[]>([])
 const totalSize = ref<number>()
-
+const task = ref<Task>()
+const open = (row: any) => {
+    task.value = row
+    eventBus.emit("task", task.value)
+    eventBus.emit("showTaskUpdate", true)
+}
+eventBus.on('taskChange', () => {
+    loadTasks()
+})
 </script>
 
 <style scoped lang="scss">
@@ -122,10 +145,8 @@ const totalSize = ref<number>()
         top: -1px;
         padding: 0;
         height: 82%;
+        overflow: auto;
 
-        .el-table {
-            overflow: auto;
-        }
     }
 
     .el-footer {

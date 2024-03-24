@@ -21,7 +21,7 @@
                         <el-input type="text" v-model="projectForm.mark"></el-input>
                     </el-form-item>
                     <el-form-item label="截止时间" prop="deadline" class="required-label">
-                        <el-input type="date" v-model="projectForm.deadline"></el-input>
+                        <el-date-picker v-model="projectForm.deadline" type="datetime" style="width: 100%;"/>
                     </el-form-item>
                     <el-form-item label="项目描述" prop="description">
                         <el-input type="textarea" v-model="projectForm.description" maxlength="255" show-word-limit :rows="2"></el-input>
@@ -62,7 +62,7 @@ const projectForm = reactive({
     mark:'',
     deadline:'',
     description:'',
-    creatorId: JSON.parse(JSON.stringify(userStore.userInfo.data.userId))
+    creatorId: JSON.parse(JSON.stringify(userStore.userInfo.userId))
 })
 const teamName = ref('')
 const nextStep = () => {

@@ -87,18 +87,18 @@ import { ref, onBeforeMount } from 'vue'
 import { useUserStore } from '@/store/user'
 import eventBus from '@/utils/event';
 import { projectMain } from '@/utils/tools';
+onBeforeMount(() => {
+    userInfo.value = store.userInfo
+})
 eventBus.on('userInfo', (data) => {
     userInfo.value = data;
 })
-let userInfo = ref({
-    userName: '',
+let userInfo = ref<any>({
 })
 const isCollapse = ref(false)
 const draf = ref<any>(null)
 const store = useUserStore()
-onBeforeMount(() => {
-    userInfo.value = store.userInfo.data
-})
+
 const active = ref('1')
 
 

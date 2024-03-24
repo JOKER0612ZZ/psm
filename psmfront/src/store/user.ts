@@ -1,27 +1,32 @@
-
+import { authorities } from "@/api/interface";
 import { defineStore } from "pinia";
 
 export const useUserStore = defineStore('user', {
     state: () => ({
         userInfo: {
-            data: {
-                token: '',
-                userName:'',
-                username:'',
-                userId:'',
-                gender:'',
-                password:'',
-                nickname:''
+            token: '',
+            userName: '',
+            username: '',
+            userId: '',
+            gender: '',
+            password: '',
+            nickname: '',
+            projectAuthorities:[
+                {
+                    projectId :'',
+                    authorities: <authorities[]>[{
 
-            },
+                    }]
+                }
+            ],
         }
     }),
     actions: {
         setUserInfo(data: any) {
             this.userInfo = data
         },
-        getUserInfo():any  {
-            return this.userInfo.data
+        getUserInfo(): any {
+            return this.userInfo
         }
     },
     persist: {

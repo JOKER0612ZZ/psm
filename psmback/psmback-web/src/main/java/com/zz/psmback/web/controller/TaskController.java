@@ -24,13 +24,13 @@ public class TaskController {
     }
 
     @AuthProject("update:task")
-    @RequestMapping(value = "/updateTask/{pageNum}/{pageSize}", method = RequestMethod.POST)
-    public CommonResult<?> updateTask(@RequestBody TaskView taskView) {
+    @RequestMapping(value = "/updateTask/{projectId}", method = RequestMethod.POST)
+    public CommonResult<?> updateTask(@PathVariable("projectId") int projectId ,@RequestBody TaskView taskView) {
         return taskService.updateTask(taskView);
     }
     @AuthProject("insert:task")
-    @RequestMapping(value = "/insertTask", method = RequestMethod.PUT)
-    public CommonResult<?> insertTask(@RequestBody TaskView taskView) {
+    @RequestMapping(value = "/insertTask/{projectId}", method = RequestMethod.POST)
+    public CommonResult<?> insertTask(@PathVariable("projectId") int projectId,@RequestBody TaskView taskView) {
         return taskService.insertTask(taskView);
     }
 }

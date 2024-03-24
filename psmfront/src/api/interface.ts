@@ -25,3 +25,8 @@ export interface Project{
     projectStatus:string,
     userName:string
 }
+export interface authorities{
+    authorityId:number,
+    authorityName:string,
+    authorityCode:number
+}
