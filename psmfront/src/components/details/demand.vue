@@ -6,10 +6,9 @@
                 <el-menu-item index="1" @click="selectOne">全部需求</el-menu-item>
                 <el-menu-item index="2" @click="selectTwo">我负责的需求</el-menu-item>
                 <el-menu-item index="3" @click="selectThree">我创建的需求</el-menu-item>
-
-
             </el-menu>
-        </el-header>
+            <task-insert class="taskInsert" :project-id="projectStore.projectInfo?.projectId"></task-insert>
+        </el-header> 
         <el-main>
             <el-table :data="tabledata" border style="width: 100%">
                 <el-table-column type="index" fixed width="50" align="center" />
@@ -45,7 +44,8 @@ import { Task } from '@/api/interface'
 import { useUserStore } from '@/store/user'
 import eventBus from '@/utils/event';
 import taskUpdate from '@/components/pages/task/taskUpdate.vue'
-import { hasProjectAuthority } from '@/utils/hasAuthority'
+import taskInsert from '../pages/task/taskInsert.vue';
+// import { hasProjectAuthority } from '@/utils/hasAuthority'
 const userStore = useUserStore()
 const projectStore = useProjectStore()
 const pageSize: number = 25
@@ -56,7 +56,6 @@ const paginationData = ref({
     currentPage: 1,
 })
 const selector = ref(1)
-let projectId:string
 onMounted(() => {
     loadTasks()
 })
@@ -72,7 +71,6 @@ const loadTasks = async () => {
         totalSize.value = total
         taskMyAssign.value = taskList.value.filter(task => task.assignName === userStore.userInfo.userName)
         taskMycreate.value = taskList.value.filter(task => task.creatorId === userStore.userInfo.userId)
-        projectId = taskViews[0].projectId
     }
     lodaTableData()
 }
@@ -130,13 +128,19 @@ eventBus.on('taskChange', () => {
     flex-direction: column;
 
     .el-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
         height: 8%;
         align-items: center;
         border-bottom: 1px solid #eee;
         padding: 0;
-
         .el-menu--horizontal {
             height: 100%;
+        }
+        .taskInsert{
+            position: relative;
+            right:70px;
         }
     }
 

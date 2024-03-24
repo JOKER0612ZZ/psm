@@ -11,4 +11,7 @@
                  LEFT JOIN user u1 ON ta.assigner_id = u1.user_id
         WHERE t.project_id = #{projectId}
     </select>
+    <select id="queryTasksByUserId" resultType="com.zz.psmback.common.entity.vo.TaskView">
+
+    </select>
 </mapper>

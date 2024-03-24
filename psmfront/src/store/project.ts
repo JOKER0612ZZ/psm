@@ -4,6 +4,7 @@ import { Project } from "@/api/interface"
 export const useProjectStore = defineStore('project', {
     state: () => ({
         projectInfo: null as Project | null,
+        projects:[]
     }),
     actions: {
         setProjectInfo(data: any) {
