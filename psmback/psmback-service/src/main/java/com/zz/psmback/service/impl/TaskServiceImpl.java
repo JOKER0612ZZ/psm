@@ -128,4 +128,30 @@ public class TaskServiceImpl implements TaskService {
         return CommonResult.success(true, ResponseCode.INSERT_SUCCESS.getCode(),
                 ResponseCode.INSERT_SUCCESS.getMessage(), null);
     }
+
+    @Override
+    public CommonResult<?> queryTasksByProjectIdList(int[] projectIdList) {
+        List<TaskView> result = new ArrayList<>();
+        try{
+            for(int projectId:projectIdList){
+                result.addAll(loadTaskViews(projectId));
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            return CommonResult.error(ResponseCode.SELECT_ERROR.getCode(), ResponseCode.SELECT_ERROR.getMessage(), null);
+        }
+        return CommonResult.success(true, ResponseCode.SELECT_SUCCESS.getCode(),
+                ResponseCode.SELECT_SUCCESS.getMessage(), result);
+    }
+
+    public List<TaskView> loadTaskViews(int projectId){
+        List<TaskView> taskViews;
+        try{
+            taskViews = taskDao.queryTasksByProjectId(projectId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        return taskViews;
+    }
 }

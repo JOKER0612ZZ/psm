@@ -9,4 +9,5 @@ public interface TaskService {
     CommonResult<?> queryTasksByProjectId(int projectId,int pageNum,int pageSize);
     CommonResult<?> updateTask(TaskView taskView);
     CommonResult<?> insertTask(TaskView taskView);
+    CommonResult<?> queryTasksByProjectIdList(int[] projectIdList);
 }

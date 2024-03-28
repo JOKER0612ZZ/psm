@@ -33,4 +33,9 @@ public class TaskController {
     public CommonResult<?> insertTask(@PathVariable("projectId") int projectId,@RequestBody TaskView taskView) {
         return taskService.insertTask(taskView);
     }
+
+    @RequestMapping(value = "/queryTasksByProjectIdList",method = RequestMethod.POST)
+    public CommonResult<?> queryTasksByProjectIdList(@RequestBody int[] projectIdList){
+        return taskService.queryTasksByProjectIdList(projectIdList);
+    }
 }

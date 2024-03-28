@@ -4,14 +4,14 @@
         <task-insert></task-insert>
     </el-header>
     <el-main>
-        <el-table>
-            <el-table-column prop="title" fixed label="标题"  align="center" />
-            <el-table-column prop="status" label="状态"  align="center" />
+        <el-table :data="tasks">
+            <el-table-column prop="title" fixed label="标题" align="center" />
+            <el-table-column prop="status" label="状态" align="center" />
             <el-table-column prop="creationTime" label="创建时间" align="center" />
-            <el-table-column prop="deadline" label="截止时间"  align="center" />
-            <el-table-column prop="userName" label="创建者"  align="center" />
+            <el-table-column prop="deadline" label="截止时间" align="center" />
+            <el-table-column prop="userName" label="创建者" align="center" />
             <el-table-column prop="assignName" label="负责人" align="center" />
-            <el-table-column label="所属项目" align="center "/>
+            <el-table-column prop="projectName" label="所属项目" align="center " />
         </el-table>
 
 
@@ -19,12 +19,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Task } from '@/api/interface'
-import taskInsert from './taskInsert.vue';
+import { useProjectStore } from '@/store/project'
+import taskInsert from './taskInsert.vue'
+import { queryTasksByProjectIdList } from '@/api/task'
+const projectStore = useProjectStore()
+const projects = projectStore.projects
+const projectIdList: number[] = projects.map(project => parseInt(project.projectId))
+const tasks = ref<Task[]>([])
+onMounted(() => {
+    queryAllTasks(projectIdList)
+})
+const queryAllTasks = async(projectIdList: number[]) => {
+    tasks.value = await queryTasksByProjectIdList(projectIdList)
+    console.log(tasks)
+}
 defineProps({
     title: {
-        type: Object as () => string,
+        type: String,
         require: true
     },
     taskList: {

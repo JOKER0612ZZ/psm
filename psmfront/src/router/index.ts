@@ -50,6 +50,11 @@ const routes: Array<RouteRecordRaw> = [
                 path: 'demand',
                 name: 'demand',
                 component: () => import('@/components/details/demand.vue')
+              },
+              {
+                path: 'projectFile',
+                name: 'projectFile',
+                component: () => import('@/components/details/projectFile.vue')
               }
             ]
           },

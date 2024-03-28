@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-button @click="visible=true" type="primary">添加任务</el-button>
+        <el-button plain type="primary" @click="visible=true">添加任务</el-button>
         <el-dialog v-model="visible" class="task_update" title="新增任务">
             <el-form ref="taskForm" :model="task" label-width="auto" label-position="top" :rules="formRules">
                 <el-form-item label="标题"  :show-message="formStatus.title">
@@ -59,7 +59,8 @@ const task = ref<Task>({
     creatorId: '',
     status: '',
     userName: '',
-    assignName: ''
+    assignName: '',
+    projectName:''
 });
 
 const taskForm = ref<any>();

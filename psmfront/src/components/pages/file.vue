@@ -11,7 +11,29 @@
         </span>
     </div>
     <div class="myBody">
-        <div class="aside"></div>
+        <div class="aside">
+            <span>文件</span>
+            <div class="aside_menu">
+                <a>
+                    <el-icon size="30" color="rgb(102, 152, 255)">
+                        <FolderOpened />
+                    </el-icon>
+                    全部团队
+                </a>
+                <a>
+                    <el-icon color="rgb(115, 216, 151)" size="30">
+                        <FolderOpened />
+                    </el-icon>
+                    我创建的团队
+                </a>
+                <a>
+                    <el-icon color="rgb(93, 207, 255)" size="30">
+                        <FolderOpened />
+                    </el-icon>
+                    我加入的团队
+                </a>
+            </div>
+        </div>
         <div class="main"></div>
     </div>
 </template>

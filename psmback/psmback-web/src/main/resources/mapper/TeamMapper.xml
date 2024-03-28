@@ -3,4 +3,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zz.psmback.dao.TeamDao">
 
+    <select id="queryByUserId" resultType="com.zz.psmback.common.entity.vo.TeamView">
+        select t.team_id, team_name, creator_id, creation_time, project_id, u2.user_name as creator_name
+        from user u1 inner join team_member tm on u1.user_id = tm.member_id
+        inner join team t on tm.team_id = t.team_id
+        inner join user u2 on u2.user_id =t.creator_id
+        where u1.user_id=#{userId}
+    </select>
 </mapper>

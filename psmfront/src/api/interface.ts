@@ -8,7 +8,8 @@ export interface Task {
     creatorId: string,
     status: string,
     userName: string,
-    assignName: string
+    assignName: string,
+    projectName:string
 }
 export interface TaskData {
     taskViews: Task[];

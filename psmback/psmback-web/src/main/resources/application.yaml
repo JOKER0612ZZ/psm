@@ -22,7 +22,8 @@ spring:
     timeout: 30000
 
 
-
+file-storage:
+  upload-dir: programFile/
 
 #mybatis
 mybatis-plus:

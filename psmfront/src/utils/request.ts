@@ -61,6 +61,7 @@ service.interceptors.response.use(
 )
 
 export default {
+      
     // get方法
     get<T = any>(url: string, params: object = {}): Promise<T> {
         return service({
@@ -75,6 +76,14 @@ export default {
             url: url,
             method: 'post',
             data: data
+        })
+    },
+    download<T = any>(url: string, data: object = {}): Promise<T> {
+        return service({
+            url: url,
+            method: 'post',
+            data: data,  
+            responseType:'blob'
         })
     },
     // put方法

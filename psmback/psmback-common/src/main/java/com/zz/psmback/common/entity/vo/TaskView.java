@@ -10,4 +10,5 @@ import lombok.EqualsAndHashCode;
 public class TaskView extends Task {
     private String userName;
     private String assignName;
+    private String projectName;
 }
