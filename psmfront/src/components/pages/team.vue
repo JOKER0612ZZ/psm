@@ -17,19 +17,19 @@
         <div class="aside">
             <span>团队</span>
             <div class="aside_menu">
-                <a>
+                <a @click="allTeamData">
                     <el-icon size="30" color="rgb(102, 152, 255)">
                         <UserFilled />
                     </el-icon>
                     全部团队
                 </a>
-                <a>
+                <a @click="creatorTeamData">
                     <el-icon color="rgb(115, 216, 151)" size="30">
                         <UserFilled />
                     </el-icon>
                     我创建的团队
                 </a>
-                <a>
+                <a @click="JoinTeamData">
                     <el-icon color="rgb(93, 207, 255)" size="30">
                         <UserFilled />
                     </el-icon>
@@ -37,11 +37,30 @@
                 </a>
             </div>
         </div>
-        <div class="main"></div>
+        <div class="main">
+            <team-view :title="title"></team-view>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+import eventBus from '@/utils/event';
+import teamView from './team/teamView.vue';
+const allTeamData = () =>{
+    eventBus.emit('AllteamData')
+    title.value = '全部团队'
+}
+const creatorTeamData = () =>{
+    eventBus.emit('creatorTeamData')
+    title.value = '我创建的团队'
+}
+const JoinTeamData = () =>{
+    eventBus.emit('JoinTeamData')
+    title.value = '我加入的团队'
+}
+const title = ref('全部团队')
+
 </script>
 
 <style scoped lang="scss">

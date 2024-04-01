@@ -93,7 +93,7 @@ const drawer = ref(false)
     height: 40px;
     font-size: 12px;
     cursor: pointer;
-    z-index: 1000;
+    z-index: 3;
 
     &:hover {
         opacity: 0.8;

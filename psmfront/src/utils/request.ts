@@ -22,11 +22,6 @@ service.interceptors.request.use(
         if(token!==null){
             config.headers['token'] = token;
         }
-        // if(store.userInfo.data.token!==''){
-        //     console.log(store.userInfo.data.token)
-        //     config.headers.set('token',store.userInfo.data.token)
-        // }
-        // 在这里可以做些什么，例如添加token到headers
         return config
     },
     (error: any) => {
@@ -39,24 +34,27 @@ service.interceptors.request.use(
 // respone拦截器
 service.interceptors.response.use(
     (response: AxiosResponse) => {
-        /**
-         * 在这里可以对响应数据做些什么
-         * 如果你想获取http信息，如headers或status
-         * 请返回response => response
-        */
         const res = response.data;
-        if (response.status == 200 && res.success&&res.code!==1007) {
-            ElMessage.success(res.message)
-        }else if(res.code==1007){
-           return res; 
-        }else{
-            ElMessage.error(res.message)
+        if(res.status === 1015){
+            return res;
+        }
+        if (res.code === 1007) {
+            return res;
+        }
+        if (response.status === 200 && res.success) {
+            ElMessage.success(res.message);
+        } else {
+            ElMessage.error(res.message);
         }
         return res;
     },
     (error: any) => {
-        ElMessage.error(error) // for debug
-        return Promise.reject(error)
+        // 检查错误对象是否包含响应信息
+        if (error.response && error.response.status === 1015) {
+            return Promise.resolve(error.response.data); // 在状态码为1015时，直接返回响应数据
+        }
+        ElMessage.error(error); // for debug
+        return Promise.reject(error);
     }
 )
 
@@ -83,7 +81,26 @@ export default {
             url: url,
             method: 'post',
             data: data,  
-            responseType:'blob'
+            responseType:'blob',
+        }).then(response => {
+            return Promise.resolve(response); // 解决Promise
+        })
+        .catch(error => {
+            if (error.response && error.response.status === 1015) {
+                return Promise.resolve(error.response.data); // 状态码为1015时视为成功
+            } else {
+               return Promise.reject(error); // 其他错误情况
+            }
+        });
+    },
+    upload<T = any>(url: string,data: object = {}): Promise<T> {
+        return service({
+            url: url,
+            method: 'post',
+            data: data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
         })
     },
     // put方法

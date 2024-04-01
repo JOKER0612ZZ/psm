@@ -2,16 +2,16 @@
     <div class="file" @click="handleClickOutside">
         <el-main>
             <el-header>
-                <el-button>上传文件</el-button>
-                <el-button @click="backtoLastPage()" v-if="currentId.parentId!==null">返回上一级目录</el-button>
-                <el-button @click="backtoFirstPage()" v-if="currentId.parentId!==null">返回根目录</el-button>
+                <upload :psmfile="psmfile" :project-id="projectStore.projectInfo?.projectId!"></upload>
+                <el-button @click="backtoLastPage()" v-if="currentId.parentId !== null">返回上一级目录</el-button>
+                <el-button @click="backtoFirstPage()" v-if="currentId.parentId !== null">返回根目录</el-button>
                 <el-input></el-input>
             </el-header>
             <span>全部任务</span>
             <el-table :data="files" :row-style="rowStyle" @row-click="queryChildenFile">
-                <el-table-column label="文件名" prop="fileName" >
+                <el-table-column label="文件名" prop="fileName">
                     <template #default="{ row }">
-                        <div class="file_name"  @contextmenu.native="showContextMenu($event, row)">
+                        <div class="file_name" @contextmenu.native="showContextMenu($event, row)">
                             <el-icon v-if="row.type === 'folder'" size="30">
                                 <Folder />
                             </el-icon>
@@ -32,23 +32,35 @@
                 </el-table-column>
                 <el-table-column label="操作">
                     <template #default="{ row }">
-                        <a @click="download(row)" class="download">下载</a>
+                        <download :file="row" v-if="row.type === 'file'"></download>
                     </template>
                 </el-table-column>
             </el-table>
         </el-main>
     </div>
-    <contextMenu v-if="showMenu" :style="{ top: `${menuTop}px`, left: `${menuLeft}px` }" @close="closeContextMenu" @createFolder="createFolder" @createFile="createFile" />
+    <contextMenu v-if="showMenu" :style="{ top: `${menuTop}px`, left: `${menuLeft}px` }" @close="closeContextMenu"
+        @createFolder="createFolder" @createFile="createFile" />
 </template>
 <script setup lang="ts">
-import { ref, onMounted ,onBeforeUnmount} from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useProjectStore } from '@/store/project';
-import { queryFile,downloadFile } from '@/api/file'
+import { queryFile } from '@/api/file'
 import contextMenu from './contextMenu.vue'; // 导入右键菜单组件
-
-interface idlist{
-    parentId:string|null,
-    projectId:string,
+import download from '../pages/file/download.vue';
+import upload from '@/components/pages/file/upload.vue'
+import { useUserStore } from '@/store/user';
+interface idlist {
+    parentId: string | null,
+    projectId: string,
+}
+const userStore=useUserStore()
+const psmfile = {
+    filePath: '',
+    uploaderId: userStore.userInfo.userId,
+    uploaderTime: '',
+    projectId: '',
+    type: '',
+    parentId: ''
 }
 // import eventBus from '@/utils/event';
 // import upload from '@/components/pages/file/upload.vue';
@@ -59,50 +71,60 @@ const menuLeft = ref<number>(0);
 const showMenu = ref<boolean>(false); // 是否显示右键菜单
 const lastFileId = ref<idlist[]>([])
 const currentId = ref<idlist>({
-    parentId:null,
-    projectId:projectStore.projectInfo?.projectId!
+    parentId: null,
+    projectId: projectStore.projectInfo?.projectId!
 })
 onMounted(async () => {
     files.value = await queryFile(projectStore.projectInfo?.projectId!, null)
     lastFileId.value.push({
-        parentId:null,
-        projectId:projectStore.projectInfo?.projectId!
+        parentId: null,
+        projectId: projectStore.projectInfo?.projectId!,
     })
+    lastFileChange()
 })
-const queryChildenFile =async (row:any) =>{
-    if(row.type==='folder'){
+
+const lastFileChange = () => {
+    const index: number = files.value[0].filePath.lastIndexOf('/')
+    psmfile.filePath = files.value[0].filePath.substring(0, index)
+    psmfile.parentId = currentId.value.parentId!
+    psmfile.type='file'
+    // console.log(files.value[0].filePath)
+    // console.log(psmfile.filePath)
+}
+const queryChildenFile = async (row: any) => {
+    if (row.type === 'folder') {
         files.value = await queryFile(projectStore.projectInfo?.projectId!, row.fileId)
         lastFileId.value.push({
             parentId: row.fileId,
-            projectId:projectStore.projectInfo?.projectId!
+            projectId: projectStore.projectInfo?.projectId!
         })
-        currentId.value={
-            projectId:projectStore.projectInfo?.projectId!,
-            parentId:row.fileId
+        currentId.value = {
+            projectId: projectStore.projectInfo?.projectId!,
+            parentId: row.fileId
         }
-    }  
+    }
+    lastFileChange()
 }
 const rowStyle = (_row: any, _index: number) => {
     return {
-        height: '50px', // 设置行高
+        height: '60px', // 设置行高
         // 其他样式
     };
 };
-const download = (row:any) =>{
-    downloadFile(row)
-}
-const backtoLastPage = async() =>{
+const backtoLastPage = async () => {
     lastFileId.value.pop()
     currentId.value = lastFileId.value[lastFileId.value.length - 1]
+    lastFileChange()
     files.value = await queryFile(currentId.value.projectId, currentId.value.parentId)
 }
-const backtoFirstPage = async()=>{
-    files.value = await queryFile(lastFileId.value[0].projectId,lastFileId.value[0].parentId)
+const backtoFirstPage = async () => {
+    files.value = await queryFile(lastFileId.value[0].projectId, lastFileId.value[0].parentId)
     currentId.value = lastFileId.value[0]
+    lastFileChange()
     lastFileId.value = []
     lastFileId.value.push({
-        parentId:null,
-        projectId:projectStore.projectInfo?.projectId!
+        parentId: null,
+        projectId: projectStore.projectInfo?.projectId!
     })
 }
 const showContextMenu = (event: MouseEvent, row: any) => {
@@ -110,7 +132,6 @@ const showContextMenu = (event: MouseEvent, row: any) => {
     menuTop.value = event.clientY;
     menuLeft.value = event.clientX;
     showMenu.value = true;
-
     console.log(row)
 };
 
@@ -174,10 +195,11 @@ onBeforeUnmount(() => {
     background-color: #fff;
     display: flex;
     flex-direction: row;
-    .el-input{
+
+    .el-input {
         position: absolute;
         height: 30px;
-        width:150px;
+        width: 150px;
         right: 40px;
     }
 }
@@ -200,13 +222,14 @@ onBeforeUnmount(() => {
 .el-table td.el-table__cell {
     border-bottom: none;
 }
-.download{
+
+.download {
     display: block;
-    z-index: 1000;
     width: 100px;
     height: 30px;
 }
-.download:hover{
+
+.download:hover {
     cursor: pointer;
     text-decoration: underline;
 }

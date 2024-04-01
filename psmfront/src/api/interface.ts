@@ -31,3 +31,23 @@ export interface authorities{
     authorityName:string,
     authorityCode:number
 }
+
+export interface PsmFile{
+    fileId:string,
+    fileName:string,
+    filePath:string,
+    uploaderId:string,
+    uploaderTime:string,
+    projectId:string,
+    type:string,
+    parentId:string,
+}
+
+export interface Team{
+    teamId:string
+    teamName:string
+    creatorId:string
+    creationTime:string
+    projectId:string
+    creatorName:string
+}

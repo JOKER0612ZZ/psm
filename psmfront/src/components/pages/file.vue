@@ -34,11 +34,14 @@
                 </a>
             </div>
         </div>
-        <div class="main"></div>
+        <div class="main">
+            <!-- <upload></upload> -->
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
+// import upload from '@/components/pages/file/upload.vue'
 </script>
 
 <style scoped lang="scss">

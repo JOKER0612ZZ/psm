@@ -63,7 +63,14 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'team',
         name: 'team',
-        component: () => import('@/components/pages/team.vue')
+        component: () => import('@/components/pages/team.vue'),
+        children:[
+          {
+            path:'member/taskId:',
+            name:'member',
+            component:() => import('@/components/pages/team/member.vue')
+          },
+        ]
       },
       {
         path: 'task',

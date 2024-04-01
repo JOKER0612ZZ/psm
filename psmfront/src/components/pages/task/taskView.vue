@@ -24,6 +24,7 @@ import { Task } from '@/api/interface'
 import { useProjectStore } from '@/store/project'
 import taskInsert from './taskInsert.vue'
 import { queryTasksByProjectIdList } from '@/api/task'
+
 const projectStore = useProjectStore()
 const projects = projectStore.projects
 const projectIdList: number[] = projects.map(project => parseInt(project.projectId))
