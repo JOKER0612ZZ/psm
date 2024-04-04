@@ -1,9 +1,9 @@
 <template>
     <div>
-        <el-button plain type="primary" @click="visible=true">添加任务</el-button>
+        <el-button plain type="primary" @click="visible = true">添加任务</el-button>
         <el-dialog v-model="visible" class="task_update" title="新增任务">
             <el-form ref="taskForm" :model="task" label-width="auto" label-position="top" :rules="formRules">
-                <el-form-item label="标题"  :show-message="formStatus.title">
+                <el-form-item label="标题" :show-message="formStatus.title">
                     <el-input v-model="task.title"></el-input>
                 </el-form-item>
                 <el-form-item label="负责人" prop="assignName" :show-message="formStatus.assignName">
@@ -23,7 +23,7 @@
                 </el-form-item>
                 <el-form-item label="所属项目" prop="projectId" v-if="!projectId">
                     <el-select>
-                    </el-select>    
+                    </el-select>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submit">确认</el-button>
@@ -37,8 +37,8 @@
 import { Task } from '@/api/interface'
 import { ref } from 'vue'
 defineProps({
-    projectId:{
-        type: Object as () =>string,
+    projectId: {
+        type: Object as () => string,
     }
 })
 const formRules = {
@@ -58,9 +58,10 @@ const task = ref<Task>({
     deadline: '',
     creatorId: '',
     status: '',
-    userName: '',
+    creatorName: '',
     assignName: '',
-    projectName:''
+    projectName: '',
+    assignerId: ''
 });
 
 const taskForm = ref<any>();

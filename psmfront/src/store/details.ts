@@ -1,7 +1,8 @@
 import { defineStore } from "pinia"
 export const useDetailStore = defineStore("details",{
     state:()=>({
-        projectDetails:false
+        projectDetails:false,
+        teamDetails:false
     }),
     persist:{
         key: 'details', //存储名称

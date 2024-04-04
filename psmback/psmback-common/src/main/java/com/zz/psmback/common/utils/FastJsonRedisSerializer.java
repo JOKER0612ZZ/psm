@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedList;
 
 
 /**
@@ -77,6 +78,7 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T>
         // 使用FastJson将JSON字符串反序列化为指定类型的对象
         return JSON.parseObject(str, clazz);
     }
+
 
     /**
      * 获取Java类型的描述。

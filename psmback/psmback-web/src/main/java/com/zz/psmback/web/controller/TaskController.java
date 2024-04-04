@@ -38,4 +38,15 @@ public class TaskController {
     public CommonResult<?> queryTasksByProjectIdList(@RequestBody int[] projectIdList){
         return taskService.queryTasksByProjectIdList(projectIdList);
     }
+
+    @RequestMapping(value="/queryTaskStatus/{projectId}",method = RequestMethod.GET)
+    public CommonResult<?> queryTaskStatus(@PathVariable("projectId") int projectId){
+        return taskService.queryTaskStatus(projectId);
+    }
+    @AuthProject("create:task_assign")
+    @AuthProject("update:task_assign")
+    @RequestMapping(value="/assignTask/{projectId}/{taskId}/{assignerId}",method = RequestMethod.PUT)
+    public CommonResult<?> assignTask(@PathVariable("projectId") int projectId,@PathVariable("taskId") int taskId,@PathVariable("assignerId") int assignerId){
+        return taskService.assignTask(projectId,taskId,assignerId);
+    }
 }

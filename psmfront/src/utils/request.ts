@@ -1,3 +1,4 @@
+import router from '@/router';
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { ElMessage } from 'element-plus'
 // 创建axios实例
@@ -19,9 +20,10 @@ export interface ResponseData<T = any> {
 service.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
         const token = window.sessionStorage.getItem('token')
-        if(token!==null){
+        if (token !== null) {
             config.headers['token'] = token;
         }
+        return config;
         return config
     },
     (error: any) => {
@@ -38,7 +40,14 @@ service.interceptors.response.use(
         if(res.status === 1015){
             return res;
         }
+        if(res.code === 1022){
+            sessionStorage.clear()
+            router.replace('/login')
+        }
         if (res.code === 1007) {
+            return res;
+        }
+        if(res === ''){
             return res;
         }
         if (response.status === 200 && res.success) {

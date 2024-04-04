@@ -25,7 +25,15 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'index',
         name: 'index',
-        component: () => import('@/components/pages/index.vue')
+        redirect:'/home/index/indexOverView',
+        component: () => import('@/components/pages/index.vue'),
+        children: [
+          {
+            path: 'indexOverView',
+            name: 'indexOverView',
+            component: () =>import('@/components/pages/index/indexOverview.vue')
+          }
+        ]
       },
       {
         path: 'project',
@@ -64,13 +72,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'team',
         name: 'team',
         component: () => import('@/components/pages/team.vue'),
-        children:[
-          {
-            path:'member/taskId:',
-            name:'member',
-            component:() => import('@/components/pages/team/member.vue')
-          },
-        ]
       },
       {
         path: 'task',

@@ -6,18 +6,18 @@ import com.zz.psmback.common.entity.Team;
 import com.zz.psmback.common.entity.vo.ProjectDetails;
 import com.zz.psmback.common.result.CommonResult;
 import com.zz.psmback.common.result.ResponseCode;
+import com.zz.psmback.common.utils.RecordUtils;
 import com.zz.psmback.common.utils.RedisUtils;
 import com.zz.psmback.dao.ProjectDao;
 import com.zz.psmback.dao.TeamDao;
 import com.zz.psmback.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * 30代表项目
@@ -33,6 +33,9 @@ public class ProjectServiceImpl implements ProjectService {
     TeamDao teamDao;
     @Autowired
     RedisUtils redisUtils;
+    @Autowired
+    @Qualifier("recordUtils")
+    RecordUtils<ProjectDetails> recordUtils;
     @Override
     public CommonResult<?> createProject(Project project ,String teamName) {
         try{
@@ -67,6 +70,8 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectDetails> projects;
         if(redisUtils.hasKey("Project_User_" + userId)){
             projects = (List<ProjectDetails>) redisUtils.Range("Project_User_"+userId);
+            HashSet<ProjectDetails> set = new HashSet<>(projects);
+            projects = new ArrayList<>(set);
             log.info("从redis中取得:Project_User_"+userId);
         }else{
             try {
@@ -80,4 +85,53 @@ public class ProjectServiceImpl implements ProjectService {
         }
         return CommonResult.success(true, ResponseCode.SELECT_SUCCESS.getCode(), ResponseCode.SELECT_SUCCESS.getMessage(), projects);
     }
+
+    @Override
+    public void addRecord(ProjectDetails projectDetails,int userId) {
+        RecordUtils<ProjectDetails> list = new RecordUtils<>();
+        List<ProjectDetails> backup =null;
+        if(redisUtils.hasKey("Record_"+userId)){
+            backup = (List<ProjectDetails>) redisUtils.get("Record_"+userId);
+            LinkedList<ProjectDetails> a = new LinkedList<ProjectDetails>(backup);
+            list.setList(a);
+        }
+        try{
+            list.add(projectDetails);
+            redisUtils.set("Record_"+userId,list.getList());
+
+        }catch(Exception e){
+            e.printStackTrace();
+            redisUtils.set("Record_"+userId,backup);
+        }
+    }
+
+    @Override
+    public CommonResult<?> getRecords(int userId) {
+        List<ProjectDetails> records = new LinkedList<>();
+        List<ProjectDetails> backup = new LinkedList<>();
+        if(redisUtils.hasKey("Record_"+userId)){
+            backup = (List<ProjectDetails>) redisUtils.get("Record_"+userId);
+        }
+        try{
+            records = (List<ProjectDetails>) redisUtils.get("Record_"+userId);
+        }catch (Exception e){
+            redisUtils.set("Record_"+userId,backup);
+        }
+        return CommonResult.success(true, ResponseCode.SELECT_SUCCESS.getCode(), ResponseCode.SELECT_SUCCESS.getMessage(), records);
+    }
+
+    @Override
+    public CommonResult<?> queryProgress(int projectId) {
+        Double percents = 0.0;
+        try{
+            percents =  projectDao.queryProgress(projectId);
+            if(percents==null) percents =0.0;
+            percents =  (Math.round(percents * 10.0) / 10.0);
+        }catch (Exception e){
+            e.printStackTrace();
+            return CommonResult.error(false, ResponseCode.SELECT_ERROR.getCode(),ResponseCode.SELECT_ERROR.getMessage(),null);
+        }
+        return CommonResult.success(true,ResponseCode.SELECT_SUCCESS.getCode(), ResponseCode.SELECT_SUCCESS.getMessage(),percents);
+    }
 }
+

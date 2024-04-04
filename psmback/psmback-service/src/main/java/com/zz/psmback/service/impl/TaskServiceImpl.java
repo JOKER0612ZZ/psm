@@ -1,6 +1,7 @@
 package com.zz.psmback.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zz.psmback.common.entity.Task;
 import com.zz.psmback.common.entity.vo.TaskView;
@@ -17,10 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.ws.Response;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -38,7 +36,6 @@ public class TaskServiceImpl implements TaskService {
         List<TaskView> taskViews;
         List<TaskView> currentTaskViews;
         Map<String, Object> taskMap = new HashMap<>();
-        QueryWrapper<Task> query = new QueryWrapper<>();
         String key = "Project_" + projectId + "_Tasks";
         long total;
         try {
@@ -144,6 +141,51 @@ public class TaskServiceImpl implements TaskService {
                 ResponseCode.SELECT_SUCCESS.getMessage(), result);
     }
 
+    @Override
+    public CommonResult<?> queryTaskStatus(int projectId) {
+        LinkedHashMap<String,Integer> status;
+        try{
+            status = taskDao.queryStatus(projectId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return CommonResult.error(ResponseCode.SELECT_ERROR.getCode(), ResponseCode.SELECT_ERROR.getMessage(), null);
+        }
+        return CommonResult.success(true, ResponseCode.SELECT_SUCCESS.getCode(),
+                ResponseCode.SELECT_SUCCESS.getMessage(), status);
+    }
+
+    @Override
+    public CommonResult<?> assignTask(int projectId,int taskId, int assignerId) {
+        UpdateWrapper<Task> query = new UpdateWrapper<>();
+        query.eq("task_id",taskId).set("task_status","进行中");
+        String key = "Project_" + projectId + "_Tasks";
+        try{
+            Integer existed = taskDao.assignedTask(taskId);
+            if (existed != null) {
+                int updated = taskDao.updateAssignedTask(taskId, assignerId);
+                if (updated == 0) {
+                    return CommonResult.error(ResponseCode.TASK_ASSIGN_FAILED.getCode(),
+                            ResponseCode.TASK_ASSIGN_FAILED.getMessage(), null);
+                }
+            } else {
+                int result = taskDao.assignTask(taskId, assignerId);
+                if (result == 0) {
+                    return CommonResult.error(ResponseCode.TASK_ASSIGN_FAILED.getCode(),
+                            ResponseCode.TASK_ASSIGN_FAILED.getMessage(), null);
+                }
+                taskDao.updateTaskStatus(taskId,"进行中");
+            }
+            updateRedisTask(projectId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return CommonResult.error(ResponseCode.TASK_ASSIGN_FAILED.getCode(),
+                    ResponseCode.TASK_ASSIGN_FAILED.getMessage(), null);
+
+        }
+        return CommonResult.success(ResponseCode.TASK_ASSIGN_SUCCESS.getCode(),
+                ResponseCode.TASK_ASSIGN_SUCCESS.getMessage(), null);
+    }
+
     public List<TaskView> loadTaskViews(int projectId){
         List<TaskView> taskViews;
         try{
@@ -153,5 +195,15 @@ public class TaskServiceImpl implements TaskService {
             return null;
         }
         return taskViews;
+    }
+
+    public void updateRedisTask(int projectId){
+        List<TaskView> taskViews = taskDao.queryTasksByProjectId(projectId);
+        Map<String, Object> taskMap = new HashMap<>();
+        taskMap.put("taskViews", taskViews);
+        taskMap.put("total", taskViews.size());
+        String key = "Project_" + projectId + "_Tasks";
+        redisUtils.set(key, taskMap);
+        redisUtils.expire(key, 24 * 60 * 60);
     }
 }

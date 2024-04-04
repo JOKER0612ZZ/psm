@@ -9,5 +9,6 @@ import java.util.List;
 
 @Mapper
 public interface ProjectDao extends BaseMapper<Project> {
-    List<ProjectDetails> queryUserProject(Integer user_id);
+    List<ProjectDetails> queryUserProject(Integer userId);
+    Double queryProgress(Integer projectId);
 }

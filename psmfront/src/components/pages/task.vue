@@ -17,21 +17,21 @@
         <div class="aside">
             <span>任务</span>
             <div class="aside_menu">
-                <a>
+                <a @click="allTasks">
                     <el-icon size="30" color="rgb(102, 152, 255)">
                         <List />
                     </el-icon>
                     全部任务
                 </a>
-                <a>
+                <a @click="creatorTasks">
                     <el-icon color="rgb(115, 216, 151)" size="30">
                         <List />
-                    </el-icon>我负责的任务
+                    </el-icon>我创建的任务
                 </a>
-                <a>
+                <a @click="joinTasks">
                     <el-icon color="rgb(93, 207, 255)" size="30">
                         <List />
-                    </el-icon>我创建的任务
+                    </el-icon>我负责的任务
                 </a>
             </div>
         </div>
@@ -45,8 +45,19 @@
 import { ref } from 'vue'
 import { Task } from '@/api/interface';
 import taskView from '@/components/pages/task/taskView.vue'
+import eventBus from '@/utils/event'
+const allTasks  = () =>{
+    eventBus.emit('allTasks')
+}
+const creatorTasks = () =>{
+    eventBus.emit('creatorTasks')
+}
+const joinTasks= ()=>{
+    eventBus.emit('joinTasks')
+}
 const title = ref('全部任务')
 const taskList = ref<Task[]>([])
+
 </script>
 
 <style scoped lang="scss">

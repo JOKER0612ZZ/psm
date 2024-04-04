@@ -1,10 +1,10 @@
 <template>
     <div id="home">
         <el-container>
-            <el-aside width="200px">
-                <el-menu :default-active="active" class="el-menu-vertical" :collapse="isCollapse">
+                <el-menu :default-active="active" class="el-menu-vertical" :collapse="isCollapse" >
 
                     <el-menu-item index="1" class="top">
+                        <el-icon><UserFilled/></el-icon>
                         <template #title>
                             <span style="font-size: 20px; display: inline-block;">{{ userInfo.userName }}</span>
                         </template>
@@ -31,7 +31,7 @@
                             </template>
                         </el-menu-item>
                     </router-link>
-                    <router-link to="/home/team">
+                    <router-link to="/home/team"  @click="teamMain">
                         <el-menu-item index="4">
                             <el-icon>
                                 <Avatar />
@@ -71,7 +71,6 @@
 
                     </el-menu-item>
                 </el-menu>
-            </el-aside>
             <el-main>
                 <user-router :user-info="userInfo"></user-router>
                 <router-view>
@@ -86,7 +85,7 @@ import userRouter from '@/components/main-views/user.vue'
 import { ref, onBeforeMount } from 'vue'
 import { useUserStore } from '@/store/user'
 import eventBus from '@/utils/event';
-import { projectMain } from '@/utils/tools';
+import { projectMain,teamMain } from '@/utils/tools';
 onBeforeMount(() => {
     userInfo.value = store.userInfo
 })
@@ -128,9 +127,9 @@ const handle = () => {
     overflow: visible;
 }
 
-.el-aside {
-    height: 100vh;
-    overflow: hidden;
+.el-menu{
+    height:100vh;
+    overflow:hidden;
 }
 
 .el-main {
@@ -148,7 +147,7 @@ const handle = () => {
 
     color: #ddd;
     width: 200px;
-    height: 100%;
+    height: 100vh;
 }
 
 .el-menu-vertical:deep(.el-menu-item) {
@@ -161,7 +160,7 @@ const handle = () => {
 
 .el-menu--collapse {
     background-color: #48525c;
-    height: 100%;
+    height: 100vh;
 }
 
 .el-menu--collapse .el-menu-item .menu-bottom {
@@ -181,7 +180,8 @@ const handle = () => {
 }
 
 .top {
-    display: block;
+    display: flex;
+    align-items: center;
     height: 70px;
     margin: 0 auto;
     padding-top: 10px;

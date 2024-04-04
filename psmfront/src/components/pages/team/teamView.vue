@@ -3,7 +3,13 @@
         <span>{{ title }}</span>
     </el-header>
     <el-main>
-        <el-table :data="tableData" @row-click="loadTeamMembers" :row-style="rowStyle">
+        <el-table :data="tableData" :row-style="rowStyle" >
+            <el-table-column type="expand">
+                <template #default={row}>
+                    <span>团队成员</span>
+                    <member :team-id="row.teamId"></member>
+                </template>
+            </el-table-column>
             <el-table-column label="团队名称" prop="teamName" sortable></el-table-column>
             <el-table-column label="创建时间" prop="creationTime" sortable></el-table-column>
             <el-table-column label="创建者" prop="creatorName"></el-table-column>
@@ -13,23 +19,25 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { queryTeamsByUserId,queryTeamMembers } from '@/api/team'
+import { queryTeamsByUserId } from '@/api/team'
 import { useUserStore } from '@/store/user'
 import eventBus from '@/utils/event'
 import { Team } from '@/api/interface'
+import {cloneDeep} from 'lodash'
+import member from '@/components/pages/team/member.vue'
 const userInfo = useUserStore().userInfo
 const tableData = ref<any>()
 const teamData = ref<any>()
 defineProps({
     title: {
-        type: Object as () => string,
+        type: String,
         required: true
     }
 })
 onMounted(async() => {
     teamData.value = await queryTeamsByUserId(userInfo.userId)
     console.log(teamData.value)
-    tableData.value = JSON.parse(JSON.stringify(teamData.value))
+    tableData.value = cloneDeep(teamData.value)
     console.log(tableData.value)
 })
 const rowStyle = (_row: any, _index: number) => {
@@ -38,19 +46,17 @@ const rowStyle = (_row: any, _index: number) => {
         // 其他样式
     };
 };
-eventBus.on('allTeamData', () => {
-    tableData.value = JSON.parse(JSON.stringify(teamData.value))
-})
+eventBus.on('allteamData', () => {
+    tableData.value = cloneDeep(teamData.value)
+});
+
 eventBus.on('creatorTeamData', () => {
-    tableData.value = teamData.value.filter((team: Team) => team.creatorId === userInfo.userId)
-})
+    tableData.value = cloneDeep((teamData.value.filter((team:Team) => team.creatorId === userInfo.userId)))
+});
+
 eventBus.on('JoinTeamData', () => {
-    tableData.value = teamData.value.filter((team: Team) => team.creatorId !== userInfo.userId)
-})
-const loadTeamMembers = (row:any) => {
-    console.log(row.teamId)
-    queryTeamMembers(row.teamId)
-}
+    tableData.value = cloneDeep((teamData.value.filter((team:Team) => team.creatorId !== userInfo.userId)))
+});
 </script>
 
 <style scoped lang="scss">

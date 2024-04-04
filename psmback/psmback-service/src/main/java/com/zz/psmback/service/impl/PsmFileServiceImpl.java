@@ -1,5 +1,4 @@
 package com.zz.psmback.service.impl;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zz.psmback.common.entity.PsmFile;
 import com.zz.psmback.common.entity.vo.PsmFileView;
 import com.zz.psmback.common.result.CommonResult;
@@ -16,18 +15,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.rowset.serial.SerialBlob;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.sql.Blob;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -51,18 +54,30 @@ public class PsmFileServiceImpl implements PsmFileService {
 
     @Override
     public CommonResult<?> uploadFile(MultipartFile[] files, PsmFile psmFile) {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = now.format(formatter);
+        psmFile.setUploaderTime(formattedDateTime);
+        String path = psmFile.getFilePath();
         try {
             for (MultipartFile file : files) {
                 String fileName = file.getOriginalFilename();
+
                 if (fileName != null && !fileName.isEmpty()) {
-                    Path filePath = Paths.get(dir, psmFile.getFilePath(), fileName);
+                    Path filePath = Paths.get(dir,path, fileName);
+                    if(Files.exists(filePath)){
+                        return CommonResult.error(ResponseCode.FILE_EXISTED.getCode(), "该文件已存在，请修改文件名", null);
+                    }
                     // 确保目录存在，不存在则创建
+                    Path storagePath = Paths.get(path, fileName);
                     Files.createDirectories(filePath.getParent());
                     // 将文件保存到指定路径
                     file.transferTo(filePath);
+                    psmFile.setFilePath(String.valueOf(storagePath));
+                    psmFile.setFileName(fileName);
+                    psmFileDao.insert(psmFile);
                 }
             }
-            psmFileDao.insert(psmFile);
             return CommonResult.success(true, 11111, "上传成功", null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,7 +86,9 @@ public class PsmFileServiceImpl implements PsmFileService {
     }
 
     @Override
-    public ResponseEntity<?> downloadFile(String path,HttpServletResponse response) {
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity<?> downloadFile(PsmFile psmFile,int userId, HttpServletResponse response) {
+        String path = psmFile.getFilePath();
         Path filePath = Paths.get(dir, path);
         try {
             // 检查文件是否存在
@@ -86,17 +103,17 @@ public class PsmFileServiceImpl implements PsmFileService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentDispositionFormData("attachment", file.getName());
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-
+            psmFileDao.createOperation(psmFile,userId,"download");
             // 返回 ResponseEntity
-            return ResponseEntity.ok()
+            return ResponseEntity.status(ResponseCode.DOWNLOAD_SUCCESS.getCode())
                     .headers(headers)
                     .body(new InputStreamResource(inputStream));
         } catch (IOException e) {
+            psmFileDao.createOperation(psmFile,userId,"操作失败");
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
         }
     }
-
 
     @Override
     public CommonResult<?> queryFileByProjectIdAndParentId(int projectId, Integer parentId) {
@@ -114,7 +131,7 @@ public class PsmFileServiceImpl implements PsmFileService {
 
     @Override
     public CommonResult<?> queryFileByFileId(int fileId) {
-        List<PsmFileView> files;
+        PsmFileView files;
         try{
             files = psmFileDao.queryByFileId(fileId);
             return CommonResult.success(true,ResponseCode.SELECT_SUCCESS.getCode(),

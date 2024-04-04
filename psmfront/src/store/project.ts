@@ -10,7 +10,7 @@ export const useProjectStore = defineStore('project', {
         setProjectInfo(data: any) {
             this.projectInfo = data
         },
-        setProjeces(data:Project[]){
+        setProjects(data:Project[]){
             this.projects = data
         },
         getProjectInfo(): any {

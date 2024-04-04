@@ -15,14 +15,14 @@ export const login = (data: any) => {
     })
 }
 export const register = (data: any) => {
-    request.post('api/register', {
+    request.post('/api/register', {
         userName: data.userName,
         password: data.password,
         email: data.email
     })
 }
 export const logout = () => {
-    request.get('api/logout').then(res => {
+    request.get('/api/logout').then(res => {
         if (res.success) {
             window.sessionStorage.clear()
             router.replace("/login")

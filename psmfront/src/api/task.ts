@@ -14,10 +14,16 @@ export const updateTask = (task: Task) => {
             eventBus.emit('taskChange')
     })
 }
-export const queryTasksByProjectIdList = (projectIdList: number[]) => {
-    return request.post(`/task/queryTasksByProjectIdList`,projectIdList).then(res=>{
-        if(res.success){
-            return res.data
-        }
-    })
+export const queryTasksByProjectIdList = async (projectIdList: number[]) => {
+    const res = await request.post(`/task/queryTasksByProjectIdList`, projectIdList)
+    if (res.success) {
+        return res.data
+    }
+}
+
+export const queryTaskStatus = async(projectId:string)=>{
+    return request.get(`/task/queryTaskStatus/${projectId}`).then(res=>{return res.data})
+}
+export const assignTask  = async(projectId:string,taskId:string,assignerId:string)=>{
+    request.put(`/task/assignTask/${projectId}/${taskId}/${assignerId}`)
 }

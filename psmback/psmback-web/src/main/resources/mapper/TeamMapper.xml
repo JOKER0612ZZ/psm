@@ -10,4 +10,12 @@
         inner join user u2 on u2.user_id =t.creator_id
         where u1.user_id=#{userId}
     </select>
+    <select id="queryByTeamId" resultType="com.zz.psmback.common.entity.vo.TeamMember">
+        select team_id, member_id, r.role_id, role_name,user_name as member_name
+        from team_member
+        inner join user u on team_member.member_id = u.user_id
+        inner join role r on team_member.role_id = r.role_id
+        where team_id=#{teamId}
+    </select>
+
 </mapper>

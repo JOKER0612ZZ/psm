@@ -10,4 +10,6 @@ public interface TaskService {
     CommonResult<?> updateTask(TaskView taskView);
     CommonResult<?> insertTask(TaskView taskView);
     CommonResult<?> queryTasksByProjectIdList(int[] projectIdList);
+    CommonResult<?> queryTaskStatus(int projectId);
+    CommonResult<?> assignTask(int projectId,int taskId,int assignerId);
 }

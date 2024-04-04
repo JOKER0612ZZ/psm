@@ -1,0 +1,6 @@
+eventBus.emit("task", task.value)
+eventBus.emit("showTaskUpdate", true)
+eventBus.emit('userInfo', userInfo.value);
+eventBus.emit('allTasks')
+eventBus.emit('creatorTasks')
+eventBus.emit('joinTasks')

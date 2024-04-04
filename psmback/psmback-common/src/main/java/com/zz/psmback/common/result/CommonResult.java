@@ -3,12 +3,28 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
+
+/**
+ * @author zouzan
+ * @date 2024/04/04
+ */
 @Data
 public class CommonResult<T> implements Serializable {
     private boolean success;
     private Integer code;
     private String message;
     private T data;
+
+    /**
+     * 功能描述：
+     *
+     * @param success
+     * @param code
+     * @param message
+     * @param data
+     * @author zouzan
+     * @date 2024/04/04
+     */
 
     public CommonResult(Boolean success,int code,String message,T data){
         this.success=success;
@@ -48,5 +64,8 @@ public class CommonResult<T> implements Serializable {
 //    }
     public static <T> CommonResult<T> error(int code,String message,T data){
         return new CommonResult<T>(false,code, message,data);
+    }
+    public static <T> CommonResult<T>success(int code,String message,T data){
+        return new CommonResult<T>(true,code, message,data);
     }
 }

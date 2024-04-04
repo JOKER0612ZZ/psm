@@ -1,0 +1,35 @@
+
+ /* 去掉表格单元格边框 */
+ .my-table th{
+    border:none;
+  }
+.my-table td,.my-table th.is-leaf {
+  border:none;
+}
+ /* 表格最外边框 */
+.el-table--border, .el-table--group{
+  border: none;
+}
+ /* 头部边框 */
+.my-table thead tr th.is-leaf{
+  border-bottom: 1px solid #EBEEF5;
+  border-right: none;
+}
+.my-table thead tr th:nth-last-of-type(2){
+
+}
+/* 表格最外层边框-底部边框 */
+.el-table--border::after, .el-table--group::after{
+  width: 0;
+}
+.my-table::before{
+  width: 0;
+}
+.my-table .el-table__fixed-right::before,.el-table__fixed::before{
+  width: 0;
+}
+/* 表格有滚动时表格头边框 */
+.el-table--border th.gutter:last-of-type {
+    border: 1px solid #EBEEF5;  
+    border-left: none;
+}

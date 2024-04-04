@@ -23,4 +23,9 @@ public class TeamController {
     public CommonResult<?> updateTeam(@RequestBody TeamView view) {
         return teamService.updateTeam(view);
     }
+
+    @RequestMapping(value = "/queryTeamMembers/{teamId}",method = RequestMethod.GET)
+    public CommonResult<?> queryTeamMembers(@PathVariable("teamId") int teamId){
+        return teamService.queryTeamMembers(teamId);
+    }
 }

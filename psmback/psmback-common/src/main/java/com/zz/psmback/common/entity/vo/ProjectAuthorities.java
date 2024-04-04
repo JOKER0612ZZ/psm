@@ -5,6 +5,10 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * @author zouzan
+ * @date 2024/04/04
+ */
 @Data
 public class ProjectAuthorities {
     private Integer projectId;

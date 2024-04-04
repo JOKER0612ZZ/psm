@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useProjectStore } from '@/store/project';
-import { queryFile } from '@/api/file'
+import { queryFile ,queryFileByFileId} from '@/api/file'
 import contextMenu from './contextMenu.vue'; // 导入右键菜单组件
 import download from '../pages/file/download.vue';
 import upload from '@/components/pages/file/upload.vue'
@@ -53,7 +53,7 @@ interface idlist {
     parentId: string | null,
     projectId: string,
 }
-const userStore=useUserStore()
+const userStore = useUserStore()
 const psmfile = {
     filePath: '',
     uploaderId: userStore.userInfo.userId,
@@ -72,8 +72,9 @@ const showMenu = ref<boolean>(false); // 是否显示右键菜单
 const lastFileId = ref<idlist[]>([])
 const currentId = ref<idlist>({
     parentId: null,
-    projectId: projectStore.projectInfo?.projectId!
+    projectId: projectStore.projectInfo?.projectId!,
 })
+const currentFilePath = ref<any>()
 onMounted(async () => {
     files.value = await queryFile(projectStore.projectInfo?.projectId!, null)
     lastFileId.value.push({
@@ -83,13 +84,21 @@ onMounted(async () => {
     lastFileChange()
 })
 
-const lastFileChange = () => {
-    const index: number = files.value[0].filePath.lastIndexOf('/')
-    psmfile.filePath = files.value[0].filePath.substring(0, index)
-    psmfile.parentId = currentId.value.parentId!
-    psmfile.type='file'
-    // console.log(files.value[0].filePath)
-    // console.log(psmfile.filePath)
+const lastFileChange = async() => {
+    if (files.value.length === 0) {
+        currentFilePath.value=await queryFileByFileId(currentId.value.parentId!)
+        console.log(currentFilePath.value)
+        psmfile.filePath = currentFilePath.value.filePath
+        psmfile.parentId = currentFilePath.value.fileId
+        console.log(psmfile.filePath)
+        psmfile.type = 'file'
+    } else {
+        const index: number = files.value[0].filePath.lastIndexOf('/')
+        psmfile.filePath = files.value[0].filePath.substring(0, index)
+        psmfile.parentId = currentId.value.parentId!
+        psmfile.type = 'file'
+    }
+
 }
 const queryChildenFile = async (row: any) => {
     if (row.type === 'folder') {

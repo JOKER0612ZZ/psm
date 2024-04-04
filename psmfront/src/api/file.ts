@@ -9,7 +9,7 @@ export const queryFile = async (projectId: string, parentId: string | null) => {
     })
     if (res.success) return res.data
 }
-export const queryFileByFileId = async (fileId: number) => {
+export const queryFileByFileId = async (fileId: string) => {
     const res = await request.get(`/file/queryFileByFileId/${fileId}`)
     if (res.success) return res.data
 }

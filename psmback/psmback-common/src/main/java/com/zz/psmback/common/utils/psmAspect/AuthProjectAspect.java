@@ -17,12 +17,27 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 
+/**
+ * @author zouzan
+ * @date 2024/03/14
+ */
 @Slf4j
 @Aspect
 @Component
 public class AuthProjectAspect {
     @Autowired
     RedisUtils redisUtils;
+
+
+    /**
+     * 功能描述：对项目中的操作进行鉴权
+     *
+     * @param joinPoint
+     * @param authProject
+     * @return {@code Object }
+     * @author zouzan
+     * @date 2024/03/14
+     */
 
     @Around("@annotation(authProject)")
     public Object authPermission(ProceedingJoinPoint joinPoint, AuthProject authProject) {
@@ -46,6 +61,11 @@ public class AuthProjectAspect {
         return CommonResult.error(false, 403, "没有权限", null);
     }
 
+    /**
+     * @param permission
+     * @param projectAuthority
+     * @return boolean
+     */
     public boolean hasPermission(String permission, ProjectAuthorities projectAuthority) {
         return projectAuthority != null &&
                 projectAuthority.getAuthorities().stream()

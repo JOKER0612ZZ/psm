@@ -1,6 +1,9 @@
 package com.zz.psmback.common.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zz.psmback.common.entity.LoginUser;
+import com.zz.psmback.common.result.CommonResult;
+import com.zz.psmback.common.result.ResponseCode;
 import com.zz.psmback.common.utils.JwtUtils;
 import com.zz.psmback.common.utils.RedisUtils;
 import io.jsonwebtoken.Claims;
@@ -13,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -25,6 +29,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     RedisUtils redisUtils;
 
+    /**
+     * 功能描述：过滤请求和登录状态校验
+     *
+     * @param request
+     * @param response
+     * @param filterChain
+     * @author zouzan
+     * @date 2024/02/20
+     */
+
     @Override
     protected void doFilterInternal(javax.servlet.http.HttpServletRequest request,
                                     javax.servlet.http.HttpServletResponse response,
@@ -35,7 +49,15 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        Claims claim = JwtUtils.decode(token).getBody();
+        Claims claim = null;
+        try{
+            claim = JwtUtils.decode(token).getBody();
+        }catch (Exception e){
+            e.printStackTrace();
+            writeJson(response,ResponseCode.TOKEN_VALIDATE_FAILED,HttpServletResponse.SC_OK,null,false);
+            return;
+        }
+        assert claim != null;
         String username = (String) claim.get("userName");
         String redisToken = (String) redisUtils.get("Token_" + username);
         log.info("redisToken与token是否匹配:"+redisToken.equals(token));
@@ -44,8 +66,18 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, null);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }else {
-            throw new RuntimeException("用户未登录");
+            writeJson(response,ResponseCode.LOGIN_OUTDATED,HttpServletResponse.SC_OK,null,false);
+            return;
         }
         filterChain.doFilter(request, response);
+    }
+
+    public static void writeJson(HttpServletResponse response,ResponseCode responseCode,int status,
+                                 Object data,boolean isSuccess) throws IOException {
+        CommonResult<Object> result = new CommonResult<>(isSuccess, responseCode.getCode(), responseCode.getMessage(), data);
+        response.setStatus(status);
+        response.setContentType("application/json;charset=utf-8");
+        response.setCharacterEncoding("utf-8");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(result));
     }
 }

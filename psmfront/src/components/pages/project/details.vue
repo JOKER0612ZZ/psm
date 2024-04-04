@@ -25,9 +25,7 @@
                     需求
                 </router-link>
             </el-menu-item>
-
-            <el-menu-item index="3">设置</el-menu-item>
-            <el-menu-item index="4">
+            <el-menu-item index="3">
                 <router-link :to="`/home/project/details/${project.mark}/projectFile`" style="display: block; height: 100%;">
                     文件
                 </router-link>

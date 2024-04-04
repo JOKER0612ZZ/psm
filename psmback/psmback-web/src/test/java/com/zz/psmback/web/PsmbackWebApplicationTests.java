@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.sun.xml.internal.ws.api.policy.PolicyResolver;
 import com.zz.psmback.common.entity.LoginUser;
 import com.zz.psmback.common.entity.User;
+import com.zz.psmback.common.entity.vo.TeamMember;
 import com.zz.psmback.common.result.CommonResult;
 import com.zz.psmback.common.utils.JwtUtils;
 import com.zz.psmback.common.utils.RedisUtils;
+import com.zz.psmback.dao.TaskDao;
 import com.zz.psmback.dao.TeamDao;
 import com.zz.psmback.dao.UserDao;
 import com.zz.psmback.service.ProjectService;
@@ -30,7 +32,7 @@ import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
+import java.util.*;
 
 
 @SpringBootTest
@@ -60,18 +62,19 @@ class PsmbackWebApplicationTests {
     private String dir;
     @Autowired
     TeamDao teamDao;
+    @Autowired
+    TaskDao taskDao;
     @Test
     void contextLoads() {
-//        log.info("User_"+userService.queryUserByUserId(6));
-//        log.info("User_"+userService.updateNickNameAndGenderById(6,"zouzan","男"));
-//        log.info("User_"+userService.updateEmailById(6,"6666"));
-//        log.info("User_"+userService.updateUserNameById(6,"zouzan"));
-//        log.info("User_"+userService.updateUserNameById(6,"admin"));
-//        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
-//        String password= passwordEncoder.encode("123456");
-//        wrapper.set("password",password).eq("user_id",5);
-//        userDao.update(null,wrapper);
-        System.out.println(teamDao.queryByUserId(1));
+        LinkedHashMap<String,Integer> status = taskDao.queryStatus(4);
+        LinkedHashMap<String,Integer> result = new LinkedHashMap<>();
+        result.put("未分配",status.get("未分配"));
+        result.put("进行中",status.get("进行中"));
+        result.put("审核中",status.get("审核中"));
+        result.put("已完成",status.get("已完成"));
+        result.put("已延期",status.get("已延期"));
+        System.out.println(result);
+        System.out.println(status);
     }
 
 //    @Test
