@@ -4,7 +4,6 @@ import { resolve } from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-  base: './',
   server: {             
     host: '0.0.0.0',	
     port: 8081,      
@@ -15,9 +14,26 @@ export default defineConfig({
     alias:[   
       {
         find:'@',
-        replacement:resolve(__dirname,'src') 
+        replacement:resolve(__dirname,'src')                                                  
       }
     ]
+  },
+  build: {
+    chunkSizeWarningLimit: 1024,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return id.toString().split('node_modules/')[1].split('/')[0].toString();
+          }
+        },
+      },
+    },
+  },
+  assetsInclude: ['**/*.xlsx'],
+  define: {
+    'process.env': process.env,
   }
 })
+
 

@@ -25,12 +25,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted,defineEmits } from 'vue'
+import { ref, onMounted } from 'vue'
 // import { useUserStore } from '@/store/user';
 import {Members} from '@/api/interface'
-import { queryTeamMembers } from '@/api/team';
+import { queryProjectMembers,queryTeamMembers } from '@/api/team';
+import { useProjectStore } from '@/store/project';
+const projectId = useProjectStore().projectInfo?.projectId
 onMounted(async () => {
-    members.value = await queryTeamMembers(props.teamId)
+    if(props.teamId!==''){
+        members.value = await queryTeamMembers(props.teamId)
+    }else{
+        members.value = await queryProjectMembers(projectId!)
+    }
+    
     members.value = sortedMembers()
 })
 // const userId = useUserStore().userInfo.userId
@@ -48,7 +55,7 @@ const handleRowClick = (row:Members)=>{
 const props = defineProps({
     teamId: {
         type: String,
-        required: true
+        default:''
     }
 })
 </script>

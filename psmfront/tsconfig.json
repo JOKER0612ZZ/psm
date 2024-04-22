@@ -35,7 +35,9 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "src/vite-env.d.ts"
+    "src/**/*.xlsx",
+    "src/vite-env.d.ts",
+    "xlsx.d.ts"
   ],
   "references": [
     {

@@ -1,7 +1,6 @@
 package com.zz.psmback.common.utils;
 
 import com.zz.psmback.common.entity.LoginUser;
-import com.zz.psmback.common.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

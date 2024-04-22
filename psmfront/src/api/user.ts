@@ -40,4 +40,14 @@ export const updatePassWordById = (oldPassword: string, newPassword: string, For
         }
     })
 }
-
+export const searchUser=(condition:string)=>{
+    condition = encodeURIComponent(condition)
+    return request.get(`/user/searchUser/${condition}`).then(res=>{
+        return res.data
+    })
+}
+export const queryUserByUserId=async(userId:string)=>{
+    return await request.get(`./user/queryUserByUserId/${userId}`).then(res=>{
+        return res.data
+    })
+}

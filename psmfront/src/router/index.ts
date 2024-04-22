@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { intercept } from './intercept'
 // import { intercept } from './intercept'
 const routes: Array<RouteRecordRaw> = [
   {
@@ -25,13 +26,18 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'index',
         name: 'index',
-        redirect:'/home/index/indexOverView',
+        redirect: '/home/index/indexOverView',
         component: () => import('@/components/pages/index.vue'),
         children: [
           {
             path: 'indexOverView',
             name: 'indexOverView',
-            component: () =>import('@/components/pages/index/indexOverview.vue')
+            component: () => import('@/components/pages/index/indexOverview.vue')
+          },
+          {
+            path: 'indexAgent',
+            name: 'indexAgent',
+            component: () => import('@/components/pages/index/indexAgent.vue')
           }
         ]
       },
@@ -63,6 +69,16 @@ const routes: Array<RouteRecordRaw> = [
                 path: 'projectFile',
                 name: 'projectFile',
                 component: () => import('@/components/details/projectFile.vue')
+              },
+              {
+                path:'projectMember',
+                name:'projectMember',
+                component:() => import('@/components/details/projectMember.vue')
+              },
+              {
+                path:'verify',
+                name:'verify',
+                component:()=> import('@/components/details/verify.vue')
               }
             ]
           },
@@ -79,11 +95,6 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/components/pages/task.vue')
       },
       {
-        path: 'file',
-        name: 'file',
-        component: () => import('@/components/pages/file.vue')
-      },
-      {
         path: 'personal',
         name: 'personal',
         component: () => import('@/components/pages/personal.vue')
@@ -95,5 +106,5 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
-// intercept(router)
+intercept(router)
 export default router

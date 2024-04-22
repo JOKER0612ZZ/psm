@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zz.psmback.dao.PsmFileDao">
+    <insert id="createOperation">
+        insert into file_operation(file_id, operator_id, operation_time, operation_type,project_id,file_name)
+        values (#{psmfile.fileId},#{userId},NOW(),#{operationType},#{psmfile.projectId},#{psmfile.fileName})
+    </insert>
+
+    <select id="queryByProjectIdAndParentId" resultType="com.zz.psmback.common.entity.vo.PsmFileView">
+        SELECT file_id,file_name,file_path,uploader_id,uploader_time,project_id,type,parent_id,user_name
+        FROM file INNER JOIN user ON uploader_id = user_id
+        WHERE project_id = #{projectId}
+        AND (parent_id = #{parentId} OR (#{parentId} IS NULL AND parent_id IS NULL))
+    </select>
+
+    <select id="queryByFileId" resultType="com.zz.psmback.common.entity.vo.PsmFileView">
+        SELECT file_id,file_name,file_path,uploader_id,uploader_time,project_id,type,parent_id,user_name
+        FROM file INNER JOIN user ON uploader_id = user_id
+        WHERE file_id = #{fileId}
+    </select>
+    <select id="queryFileByUserId" resultType="com.zz.psmback.common.entity.PsmFile">
+        SELECT f.*
+        FROM file f
+                 INNER JOIN team t on f.project_id = t.project_id
+                 INNER JOIN team_member tm ON t.team_id = tm.team_id
+                 INNER JOIN user u ON u.user_id = tm.member_id
+        WHERE u.user_id =#{userId} AND ISNULL(parent_id)
+    </select>
+
+    <select id="queryByTaskId" resultType="com.zz.psmback.common.entity.vo.PsmFileView">
+        SELECT file.*,user_name
+        FROM file INNER JOIN user ON uploader_id = user_id
+        WHERE task_id = #{taskId}
+    </select>
+</mapper>

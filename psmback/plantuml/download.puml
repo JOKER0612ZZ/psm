@@ -1,0 +1,27 @@
+@startuml
+
+
+participant Browser
+participant Server
+participant "File System" as FS
+database MySQL as ms
+activate Browser
+Browser -> Server: 发送下载请求\n(附带文件信息psmFile)
+activate Server
+Server -> FS: 获取文件路径\n(结合存储根目录dir)
+activate FS
+FS -> Server: 文件路径
+alt 文件存在且可读
+    Server -> FS: 打开文件输入流\n(创建文件对象file)
+    FS --> Server: 文件输入流\n(inputStream)
+    Server -> Browser: 构建响应
+    Server -> ms: 记录下载操作
+    ms --> Server: 操作记录
+else 文件不存在或不可读
+    Server -> Browser: 返回错误信息
+
+end
+deactivate FS
+deactivate Server
+deactivate Browser
+@enduml

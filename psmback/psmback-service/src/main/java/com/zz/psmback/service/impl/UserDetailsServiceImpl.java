@@ -44,7 +44,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         loginUser.setAuthorities(authorities.stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
                 .collect(Collectors.toList()));
-        log.info("authorities: "+authorities+"");
         return loginUser;
     }
 }

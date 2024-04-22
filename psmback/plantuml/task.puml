@@ -1,0 +1,67 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+    interface TaskService {
+        + queryTasksByProjectId(projectId: int, pageNum: int, pageSize: int): CommonResult<?>
+        + updateTask(taskView: TaskView): CommonResult<?>
+        + insertTask(taskView: TaskView, assignerId: int): CommonResult<?>
+        + queryTasksByProjectIdList(projectIdList: int[]): CommonResult<?>
+        + queryTaskStatus(projectId: int): CommonResult<?>
+        + assignTask(projectId: int, taskId: int, assignerId: int): CommonResult<?>
+        + updateTaskStatus(projectId: int, taskId: int, status: String): CommonResult<?>
+        + queryTasksByProjectIdMyAssign(projectId: int, assignerId: int, pageNum: int, pageSize: int): CommonResult<?>
+        + queryTasksByProjectIdMyCreate(projectId: int, creatorId: int, pageNum: int, pageSize: int): CommonResult<?>
+        + getCommonResult(taskPages: Page<TaskView>): CommonResult<?>
+        + loadTaskViews(projectId: int): List<TaskView>
+        + checkAndUpdateTaskStatus(): void
+        + queryVerifyTask(projectId: int, userId: int): CommonResult<?>
+        + deleteTask(projectId: int, taskId: int): CommonResult<?>
+        + searchTask(condition: String, projectId: int): CommonResult<?>
+    }
+
+    class TaskServiceImpl implements TaskService{
+        + queryTasksByProjectId(projectId: int, pageNum: int, pageSize: int): CommonResult<?>
+        + updateTask(taskView: TaskView): CommonResult<?>
+        + insertTask(taskView: TaskView, assignerId: int): CommonResult<?>
+        + queryTasksByProjectIdList(projectIdList: int[]): CommonResult<?>
+        + queryTaskStatus(projectId: int): CommonResult<?>
+        + assignTask(projectId: int, taskId: int, assignerId: int): CommonResult<?>
+        + updateTaskStatus(projectId: int, taskId: int, status: String): CommonResult<?>
+        + queryTasksByProjectIdMyAssign(projectId: int, assignerId: int, pageNum: int, pageSize: int): CommonResult<?>
+        + queryTasksByProjectIdMyCreate(projectId: int, creatorId: int, pageNum: int, pageSize: int): CommonResult<?>
+        + getCommonResult(taskPages: Page<TaskView>): CommonResult<?>
+        + loadTaskViews(projectId: int): List<TaskView>
+        + checkAndUpdateTaskStatus(): void
+        + queryVerifyTask(projectId: int, userId: int): CommonResult<?>
+        + deleteTask(projectId: int, taskId: int): CommonResult<?>
+        + searchTask(condition: String, projectId: int): CommonResult<?>
+    }
+    class TaskController {
+            + queryTasksByProjectId(projectId: int, pageNum: int, pageSize: int): CommonResult<?>
+            + queryTasksByProjectIdMyAssign(projectId: int, assignerId: int, pageNum: int, pageSize: int): CommonResult<?>
+            + queryTasksByProjectIdMyCreate(projectId: int, creatorId: int, pageNum: int, pageSize: int): CommonResult<?>
+            + updateTask(projectId: int, taskView: TaskView): CommonResult<?>
+            + insertTask(projectId: int, taskView: TaskView, assignerId: int): CommonResult<?>
+            + queryTasksByProjectIdList(projectIdList: int[]): CommonResult<?>
+            + queryTaskStatus(projectId: int): CommonResult<?>
+            + assignTask(projectId: int, taskId: int, assignerId: int): CommonResult<?>
+            + updateTaskStatus(projectId: int, taskId: int, status: String): CommonResult<?>
+            + queryVerifyTasks(projectId: int, userId: int): CommonResult<?>
+            + deleteTask(projectId: int, taskId: int): CommonResult<?>
+            + searchTask(projectId: int, condition: String): CommonResult<?>
+        }
+         interface TaskDao {
+                + queryTasksByProjectId(projectId: int): LinkedList<TaskView>
+                + queryTasksMyAssigned(page: Page<TaskView>, projectId: int, assignerId: int): Page<TaskView>
+                + queryTasksMyCreated(page: Page<TaskView>, projectId: int, creatorId: int): Page<TaskView>
+                + queryStatus(projectId: int): LinkedHashMap<String, Integer>
+                + assignTask(taskId: int, assignerId: int): Integer
+                + assignedTask(taskId: int): Integer
+                + updateAssignedTask(taskId: int, assignerId: int): Integer
+                + updateTaskStatus(taskId: int, status: String): Integer
+                + queryVerifyTasks(projectId: int, userId: int): List<TaskView>
+                + searchTask(condition: String, projectId: int): List<TaskView>
+            }
+TaskController ..>TaskServiceImpl
+TaskServiceImpl ..>TaskDao
+@enduml

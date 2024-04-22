@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,16 +39,25 @@ public class AuthProjectAspect {
      * @author zouzan
      * @date 2024/03/14
      */
-
     @Around("@annotation(authProject)")
     public Object authPermission(ProceedingJoinPoint joinPoint, AuthProject authProject) {
         Object[] args = joinPoint.getArgs();
-        int projectId = (int) args[0];
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        String[] parameterNames = signature.getParameterNames();
+        int projectId = 0;
+        for (int i = 0; i < parameterNames.length; i++) {
+            if ("projectId".equals(parameterNames[i])) {
+                projectId = (Integer) args[i];
+                break;
+            }
+        }
+
         String permission = authProject.value();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        int finalProjectId = projectId;
         Optional<ProjectAuthorities> projectAuthority = loginUser.getProjectAuthorities().stream()
-                .filter(pa -> pa.getProjectId() == projectId)
+                .filter(pa -> pa.getProjectId() == finalProjectId)
                 .findFirst();
 
         if (projectAuthority.isPresent() && hasPermission(permission, projectAuthority.get())) {
@@ -58,7 +68,7 @@ public class AuthProjectAspect {
             }
         }
 
-        return CommonResult.error(false, 403, "没有权限", null);
+        return CommonResult.error( 403, "没有权限", null);
     }
 
     /**

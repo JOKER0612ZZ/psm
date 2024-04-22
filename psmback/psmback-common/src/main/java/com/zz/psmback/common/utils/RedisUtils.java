@@ -93,4 +93,11 @@ public class RedisUtils {
         }
         return null;
     }
+    public void sAdd(String key, Object value){
+        try{
+            redisTemplate.opsForSet().add(key,value);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 }

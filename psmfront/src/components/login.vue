@@ -5,7 +5,7 @@
                 <h2>PSM SYSTEM</h2>
             </div>
             <div class="info-img">
-                <img src="../assets/images/info.png" alt="">
+                <img src="../assets/images/info1.png" alt="">
             </div>
         </div>
         <div class="login-content">
@@ -43,12 +43,17 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { login } from '@/api/login'
 import { useRouter } from "vue-router"
 import { ElMessage } from 'element-plus'
-
 const LoginFormRef = ref<FormInstance>()
-
+    const router = useRouter()
+const goRegister = () => {
+    router.replace('/register')
+}
 onMounted(() => {
     document.body.style.backgroundColor = '#fafafa'
-    
+    const token  = sessionStorage.getItem('token')
+    if(token!==null){
+        router.replace('/home')
+    }
 })
 const validatePass = (_rule: any, value: any, callback: any) => {
     if (value === '') {
@@ -89,10 +94,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields()
 }
-const router = useRouter()
-const goRegister = () => {
-    router.replace('/register')
-}
+
 </script>
 <style scoped lang="scss">
 .el-main {

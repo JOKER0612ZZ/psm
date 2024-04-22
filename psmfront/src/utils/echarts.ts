@@ -1,15 +1,18 @@
 import * as echarts from 'echarts/core';
 import {
     BarChart,
-    LineChart
+    LineChart,
+    PieChart
 } from 'echarts/charts';
 import {
     TitleComponent,
     TooltipComponent,
     GridComponent,
+    LegendComponent,
+    ToolboxComponent,
     // 数据集组件
     DatasetComponent,
-    // 内置数据转换器组件 (filter, sort)
+    // 内置数据转换器组件 (filter, sort)=-]6789iiiiiiiiiiiiiiiiiiii9
     TransformComponent
 } from 'echarts/components';
 import { LabelLayout, UniversalTransition } from 'echarts/features';
@@ -17,7 +20,8 @@ import { SVGRenderer } from 'echarts/renderers';
 import type {
     // 系列类型的定义后缀都为 SeriesOption
     BarSeriesOption,
-    LineSeriesOption
+    LineSeriesOption,
+    PieSeriesOption
 } from 'echarts/charts';
 import type {
     // 组件类型的定义后缀都为 ComponentOption
@@ -34,6 +38,7 @@ import type {
 export type ECOption = ComposeOption<
     | BarSeriesOption
     | LineSeriesOption
+    | PieSeriesOption
     | TitleComponentOption
     | TooltipComponentOption
     | GridComponentOption
@@ -44,11 +49,14 @@ export type ECOption = ComposeOption<
 echarts.use([
     TitleComponent,
     TooltipComponent,
+    LegendComponent,
+    ToolboxComponent,
     GridComponent,
     DatasetComponent,
     TransformComponent,
     BarChart,
     LineChart,
+    PieChart,
     LabelLayout,
     UniversalTransition,
     SVGRenderer

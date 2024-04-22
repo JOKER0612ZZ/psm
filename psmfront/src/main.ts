@@ -7,10 +7,8 @@ import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import store from './store'
-
 const app = createApp(App)
 app.use(ElementPlus, { locale: zhCn }).use(store).use(router).mount('#app')
-
 //全局注册图标组件
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)

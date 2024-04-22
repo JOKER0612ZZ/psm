@@ -41,27 +41,15 @@ public class CommonResult<T> implements Serializable {
      * @param data 数据
      * 公共返回
      */
-    public static <T> CommonResult<T> error(boolean isSuccess,int code,String message,T data){
+//    public static <T> CommonResult<T> error(boolean isSuccess,int code,String message,T data){
+//        return new CommonResult<T>(isSuccess,code, message,data);
+//    }
+//    public static <T> CommonResult<T> success(boolean isSuccess,int code,String message,T data){
+//        return new CommonResult<T>(isSuccess,code, message,data);
+//    }
+    public static <T> CommonResult<T> message(boolean isSuccess,int code,String message,T data){
         return new CommonResult<T>(isSuccess,code, message,data);
     }
-    public static <T> CommonResult<T> success(boolean isSuccess,int code,String message,T data){
-        return new CommonResult<T>(isSuccess,code, message,data);
-    }
-//    public static <T> CommonResult<T> success(T data){
-//        return new CommonResult<T>(true,ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), data);
-//    }
-//    public static <T> CommonResult<T> error(T data){
-//        return new CommonResult<T>(false,ResponseCode.ERROR.getCode(), ResponseCode.ERROR.getMessage(),data);
-//    }
-//    public static <T> CommonResult<T> user_account_not_exist(T data){
-//        return new CommonResult<T>(false,ResponseCode.USER_ACCOUNT_NOT_EXIST.getCode(),ResponseCode.USER_ACCOUNT_NOT_EXIST.getMessage(),data);
-//    }
-//    public static <T> CommonResult<T> user_account_existed(T data){
-//        return new CommonResult<T>(false,ResponseCode.USER_ACCOUNT_EXISTED.getCode(),ResponseCode.USER_ACCOUNT_EXISTED.getMessage(),data);
-//    }
-//    public static <T> CommonResult<T> username_password_error(T data){
-//        return new CommonResult<T>(false,ResponseCode.USERNAME_PASSWORD_ERROR.getCode(), ResponseCode.USERNAME_PASSWORD_ERROR.getMessage(), data);
-//    }
     public static <T> CommonResult<T> error(int code,String message,T data){
         return new CommonResult<T>(false,code, message,data);
     }

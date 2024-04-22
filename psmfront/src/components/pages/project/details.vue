@@ -17,17 +17,27 @@
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false">
             <el-menu-item index="1">
                 <router-link :to="`/home/project/details/${project.mark}/view`" style="display: block; height: 100%;">
-                    概览
+                    <div class="menu_item">概览</div>
                 </router-link>
             </el-menu-item>
             <el-menu-item index="2">
                 <router-link :to="`/home/project/details/${project.mark}/demand`" style="display: block; height: 100%;">
-                    需求
+                    <div class="menu_item">需求</div>
                 </router-link>
             </el-menu-item>
             <el-menu-item index="3">
                 <router-link :to="`/home/project/details/${project.mark}/projectFile`" style="display: block; height: 100%;">
-                    文件
+                    <div class="menu_item">文件</div>
+                </router-link>
+            </el-menu-item>
+            <el-menu-item index="4">
+                <router-link :to="`/home/project/details/${project.mark}/projectMember`" style="display: block; height: 100%;">
+                    <div class="menu_item">成员</div>
+                </router-link>
+            </el-menu-item>
+            <el-menu-item index="5">
+                <router-link :to="`/home/project/details/${project.mark}/verify`" style="display: block; height: 100%;">
+                    <div class="menu_item">审核中心</div>
                 </router-link>
             </el-menu-item>
         </el-menu>
@@ -38,16 +48,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount ,onMounted} from 'vue';
 import eventBus from '@/utils/event';
 import { useProjectStore } from '@/store/project';
 import { useRouter } from 'vue-router';
 import { projectMain } from '@/utils/tools';
+import { active, addRecords } from '@/api/project';
+import { hasProjectAuthority } from '@/utils/hasAuthority';
+import { useDetailStore } from '@/store/details';
+const projectStore = useProjectStore()
+const details = useDetailStore()
+onMounted(()=>{
+    if(!hasProjectAuthority("select:task",projectStore.projectInfo?.projectId!)){
+        router.push('/home/project')
+        details.projectDetails =false
+    }else{
+        active(projectStore.projectInfo?.projectId!)
+        addRecords(projectStore.projectInfo!)
+    }
+})
 onBeforeMount(() => {
     project.value = projectStore.projectInfo
 })
 const router = useRouter()
-const projectStore = useProjectStore()
+
 let project = ref<any>({
 })
 
@@ -70,6 +94,11 @@ const goDetails = () => {
             opacity: 0.5;
         }
     }
+}
+
+.menu_item {
+    height: 100%;
+    width: 100%;
 }
 
 .el-menu-demo {

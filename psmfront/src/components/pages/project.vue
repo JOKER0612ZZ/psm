@@ -70,11 +70,16 @@
 import projectView from '@/components/pages/project/projectView.vue'
 import eventBus from '@/utils/event'
 import { useDetailStore } from '@/store/details'
-import {ref} from 'vue'
+import {onBeforeMount, ref} from 'vue'
+import { queryUserProject } from '@/api/project';
 const detailStore = useDetailStore()
 eventBus.on('projectDetails', (data) => {
     detailStore.projectDetails = data
 })
+onBeforeMount(() => {
+    queryUserProject()
+})
+
 const title = ref('全部项目')
 const page = ref(1)
 const pageOne = () => {

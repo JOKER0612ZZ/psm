@@ -1,0 +1,43 @@
+@startuml
+'https://plantuml.com/class-diagram
+class PsmFileServiceImpl implements PsmService{
+    + uploadFile(files: MultipartFile[], psmFile: PsmFile): CommonResult<?>
+    + downloadFile(psmFile: PsmFile, userId: int, response: HttpServletResponse): ResponseEntity<?>
+    + queryFileByProjectIdAndParentId(projectId: int, parentId: Integer): CommonResult<?>
+    + queryFileByFileId(fileId: int): CommonResult<?>
+    + queryFileByUserId(userId: int): CommonResult<?>
+    + uploadTaskFile(files: MultipartFile[], psmFile: PsmFile, taskId: Integer): CommonResult<?>
+    + queryByTaskId(taskId: int): CommonResult<?>
+    + deleteFile(psmFile: PsmFile): CommonResult<?>
+}
+interface PsmService{
+    +uploadFile(files: MultipartFile[], psmFile: PsmFile): CommonResult<?>
+    +downloadFile(psmFile: PsmFile, userId: int, response: HttpServletResponse): ResponseEntity<?>
+    +queryFileByProjectIdAndParentId(projectId: int, parentId: Integer): CommonResult<?>
+    +queryFileByFileId(fileId: int): CommonResult<?>
+    +queryFileByUserId(userId: int): CommonResult<?>
+    +uploadTaskFile(files: MultipartFile[], psmFile: PsmFile, taskId: Integer): CommonResult<?>
+    +queryByTaskId(taskId: int): CommonResult<?>
+    +deleteFile(psmFile: PsmFile): CommonResult<?>
+}
+class PsmFileController {
+    - psmFileService: PsmFileService
+    + uploadFile(files: MultipartFile[], psmFile: String): CommonResult<?>
+    + downloadFile(psmFile: PsmFile, userId: int, response: HttpServletResponse): ResponseEntity<?>
+    + queryFile(p: PsmFile): CommonResult<?>
+    + queryFileByParentId(fileIdStr: String): CommonResult<?>
+    + queryFileByUserId(userId: int): CommonResult<?>
+    + uploadTaskFile(files: MultipartFile[], psmFile: String, taskId: Integer): CommonResult<?>
+    + queryByTaskId(taskId: Integer): CommonResult<?>
+    + deleteFile(projectId: int, psmFile: PsmFile): CommonResult<?>
+}
+interface PsmFileDao{
+    + queryByProjectIdAndParentId(projectId: int, parentId: Integer): List<PsmFileView>
+    + queryByFileId(fileId: int): PsmFileView
+    + createOperation(psmfile: PsmFile, userId: int, operationType: String): void
+    + queryFileByUserId(userId: int): List<PsmFile>
+    + queryByTaskId(taskId: int): List<PsmFileView>
+}
+PsmFileController ..> PsmFileServiceImpl
+PsmFileServiceImpl ..> PsmFileDao
+@enduml

@@ -28,6 +28,16 @@ export interface Project {
     userName: string,
     teamId: string,
 }
+export interface ResultProject {
+    creationTime: Date,
+    creatorId: string,
+    deadline: Date,
+    description: string,
+    mark: string,
+    projectId: string,
+    projectName: string,
+    projectStatus: string,
+}
 export interface authorities {
     authorityId: number,
     authorityName: string,
@@ -35,14 +45,16 @@ export interface authorities {
 }
 
 export interface PsmFile {
-    fileId: string,
-    fileName: string,
-    filePath: string,
-    uploaderId: string,
-    uploaderTime: string,
-    projectId: string,
-    type: string,
-    parentId: string,
+    fileId: string
+    fileName: string
+    filePath: string
+    uploaderId: string
+    uploaderTime: string
+    projectId: string
+    type: string
+    parentId: string
+    size: number
+    taskId:string
 }
 
 export interface Team {
@@ -59,4 +71,31 @@ export interface Members {
     roleId: string
     roleName: string
     memberName: string
+}
+export interface MyUploadFile {
+    filePath: string
+    uploaderId: string
+    uploaderTime: string
+    projectId: string
+    type: string
+    parentId: string
+}
+export interface Message {
+    messageId: string,
+    message:string,
+    publisherId: string,
+    receiverId: string,
+    creationTime: string,
+    publisher: string,
+    receiver: string,
+    isRead:number,
+    title:string
+}
+
+export interface user{
+    userId:string
+    userName:string
+    email:string
+    nickname:string
+    gender:string
 }

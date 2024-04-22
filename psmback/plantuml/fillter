@@ -1,0 +1,38 @@
+@startuml
+participant Browser
+participant JwtAuthenticationTokenFilter
+participant WebSecurityConfigurerAdapter
+participant Controller
+participant Service
+participant Dao
+database MySQL
+activate Browser
+Browser -> JwtAuthenticationTokenFilter :发送Http请求
+activate JwtAuthenticationTokenFilter
+JwtAuthenticationTokenFilter --> Browser :用户为未登录
+JwtAuthenticationTokenFilter-> WebSecurityConfigurerAdapter :用户已登录
+deactivate JwtAuthenticationTokenFilter
+activate WebSecurityConfigurerAdapter
+WebSecurityConfigurerAdapter -> Controller :认证成功
+activate Controller
+WebSecurityConfigurerAdapter --> Browser :认证未通过
+
+deactivate WebSecurityConfigurerAdapter
+
+Controller ->Service :调用服务
+activate Service
+Service -> Dao :调用服务
+activate Dao
+Dao -> MySQL :访问数据
+MySQL --> Dao :返回数据
+Dao --> Service :返回数据
+deactivate Dao
+Service --> Controller :返回数据
+deactivate Service
+Controller --> Browser :返回数据
+deactivate Controller
+deactivate Browser
+
+
+
+@enduml

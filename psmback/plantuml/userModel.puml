@@ -1,0 +1,46 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class UserController
+interface UserService
+class UserServiceImpl
+interface UserDao
+
+
+class UserController {
+    -UserService :userService
+    +queryUser(userName: String): CommonResult<?>
+    +updateNickNameAndGenderById(userId: Integer, nickname: String, gender: String): CommonResult<?>
+    +updateUserNameById(userId: Integer, userName: String): CommonResult<?>
+    +updateEmailById(userId: Integer, email: String): CommonResult<?>
+    +updatePasswordById(userId: Integer, oldPassword: String, newPassword: String): CommonResult<?>
+    +searchUser(condition: String): CommonResult<?>
+}
+interface UserService {
+        +queryUserByUserName(userName: String): User
+        +queryUserByUserId(userId: Integer): User
+        +updateNickNameAndGenderById(userId: Integer, nickname: String, gender: String): CommonResult<?>
+        +updateUserNameById(userId: Integer, userName: String): CommonResult<?>
+        +updateEmailById(userId: Integer, email: String): CommonResult<?>
+        +updatePasswordById(userId: Integer, oldPassword: String, newPassword: String): CommonResult<?>
+        +searchUser(condition: String): CommonResult<?>
+}
+class UserServiceImpl {
+      -userDao: UserDao
+      +queryUserByUserId(userId: Integer): User
+      +updateNickNameAndGenderById(userId: Integer, nickname: String, gender: String): CommonResult<User>
+      +updateUserNameById(userId: Integer, userName: String): CommonResult<User>
+      +updateEmailById(userId: Integer, email: String): CommonResult<?>
+      +updatePasswordById(userId: Integer, oldPassword: String, newPassword: String): CommonResult<?>
+      +queryUserByUserName(userName: String): User
+      +searchUser(condition: String): CommonResult<?>
+}
+interface UserDao{
+      +assignRole(userId: int,roleId:int):int
+      +queryProAuthorities(userId:int):List<ProjectAuthorities>
+      queryUserAuthorities(userId:int):List<Authorities>
+}
+UserController ..> UserServiceImpl
+UserServiceImpl ..> UserDao
+UserServiceImpl ..|> UserService
+@enduml

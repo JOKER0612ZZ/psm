@@ -29,11 +29,11 @@
                     </router-link>
                 </div>
                 <div class="item">
-                    <span>代办</span>
-                    <a>
+                    <span>待办</span>
+                    <router-link to="/home/index/indexAgent">
                         <el-icon size="30"><Memo /></el-icon>
                         待处理的事项
-                    </a>
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -44,35 +44,12 @@
 </template>
 
 <script setup lang="ts">
-
 import { useUserStore } from '@/store/user';
+import { getCurrentDateDetails, getCurrentTimePeriod } from '@/utils/dateUtils';
 const userStore = useUserStore()
 const userInfo = userStore.userInfo
-const getCurrentDate = () => {
-    const daysOfWeek = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-    const monthsOfYear = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
-
-    const currentDate = new Date();
-    const dayOfWeek = daysOfWeek[currentDate.getDay()];
-    const month = monthsOfYear[currentDate.getMonth()];
-    const dayOfMonth = currentDate.getDate();
-
-    return `${month}${dayOfMonth}日，${dayOfWeek}。`;
-}
-const getCurrentTimePeriod = (): string => {
-    const currentDate = new Date();
-    const currentHour = currentDate.getHours();
-
-    if (currentHour >= 0 && currentHour < 12) {
-        return '上午';
-    } else if (currentHour >= 12 && currentHour < 18) {
-        return '下午';
-    } else {
-        return '晚上';
-    }
-}
 const period = getCurrentTimePeriod()
-const date = getCurrentDate()
+const date = getCurrentDateDetails()
 
 </script>
 

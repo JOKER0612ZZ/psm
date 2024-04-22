@@ -1,0 +1,33 @@
+@startuml
+autonumber
+participant Browser as C
+participant Server as S
+participant "File System" as FS
+database MySQL as DB
+
+
+C -> S: 提交文件和文件详情
+activate S
+S -> S: 验证文件信息
+alt 文件信息无效
+ S -> C: 返回错误信息
+else 文件信息有效
+  deactivate S
+  S -> DB: 查询数据库，检查文件是否已存在
+  DB --> S: 返回查询结果
+  activate S
+  alt 文件已存在
+    S -> C: 返回错误：文件已存在
+  else 文件不存在
+    S -> DB: 在数据库中创建新记录
+    DB --> S: 返回创建结果
+    S -> FS: 在文件系统中创建文件
+    FS --> S: 返回创建结果
+    S -> C: 返回成功：文件上传成功
+  end
+ end
+alt 发生异常
+  S -> C: 返回错误：文件上传失败
+end
+deactivate S
+@enduml

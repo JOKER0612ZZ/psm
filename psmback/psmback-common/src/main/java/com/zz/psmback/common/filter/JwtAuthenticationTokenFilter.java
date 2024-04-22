@@ -58,11 +58,11 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             return;
         }
         assert claim != null;
-        String username = (String) claim.get("userName");
-        String redisToken = (String) redisUtils.get("Token_" + username);
+        int userId = (int) claim.get("userId");
+        String redisToken = (String) redisUtils.get("Token_" + userId);
         log.info("redisToken与token是否匹配:"+redisToken.equals(token));
         if (token.equals(redisToken)) {
-            LoginUser loginUser = (LoginUser) redisUtils.get("UserDetails_" + username);
+            LoginUser loginUser = (LoginUser) redisUtils.get("UserDetails_" + userId);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, null);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }else {

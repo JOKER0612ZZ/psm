@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+class LoginServiceImpl implements LoginService
+class LoginController
+class LoginController{
+    +login(user:User):CommonResult<LoginUser>
+    +logout():CommonResult<?>
+    +register(user:User):CommonResult<?>
+}
+class UserDetailsServiceImpl implements UserDetailsService{
+    +loadUserByUsername(String username):UserDetails
+}
+interface UserDetailsService{
+    +loadUserByUsername(String username):UserDetails
+}
+interface LoginService{
+    +login(user:User):CommonResult<LoginUser>
+    +logout():CommonResult<?>
+    +register(user:User):CommonResult<?>
+}
+class LoginServiceImpl{
+    +login(user:User):CommonResult<LoginUser>
+    +logout():CommonResult<?>
+    +register(user:User):CommonResult<?>
+}
+LoginController ..> LoginServiceImpl
+@enduml

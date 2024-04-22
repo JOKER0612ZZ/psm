@@ -2,15 +2,15 @@
     <div>
         <el-dialog v-model="visible" class="task_update" title="修改任务">
             <el-form ref="taskForm" :model="task" label-width="auto" label-position="top" :rules="formRules"
-                v-if="task">
+                v-if="task" class="taskForm">
                 <el-form-item label="标题" prop="title" :show-message="formStatus.title">
                     <el-input v-model="task.title"></el-input>
                 </el-form-item>
                 <el-form-item label="负责人" prop="assignName" :show-message="formStatus.assignName">
                     <el-input v-model="task.assignName"></el-input>
                 </el-form-item>
-                <el-form-item label="状态" prop="status" :show-message="formStatus.status">
-                    <el-input v-model="task.status"></el-input>
+                <el-form-item label="状态" prop="status" :show-message="formStatus.status" >
+                    <el-input v-model="task.status" :readonly="true"></el-input>
                 </el-form-item>
                 <el-form-item label="描述" prop="description" :show-message="formStatus.description">
                     <el-input v-model="task.description"></el-input>
@@ -88,7 +88,7 @@ const submit = async () => {
     display: flex;
     flex-direction: column;
     width: 90%;
-    margin: 0 auto;
+    margin: 10px auto;
 
     .el-button {
         position: relative;

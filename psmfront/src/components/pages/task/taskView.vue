@@ -1,12 +1,15 @@
 <template>
     <el-header>
         <span>{{ title }}</span>
-        <task-insert></task-insert>
     </el-header>
     <el-main>
         <el-table :data="tasksData">
             <el-table-column prop="title" fixed label="标题" align="center" />
-            <el-table-column prop="status" label="状态" align="center" />
+            <el-table-column prop="status" label="状态" align="center">
+                <template #default="{ row }">
+                    <normal-status :status="row.status"></normal-status>
+                </template>
+            </el-table-column>
             <el-table-column prop="creationTime" label="创建时间" align="center" />
             <el-table-column prop="deadline" label="截止时间" align="center" />
             <el-table-column prop="creatorName" label="创建者" align="center" />
@@ -17,41 +20,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import { Task } from '@/api/interface'
 import { useProjectStore } from '@/store/project'
 import { useUserStore } from '@/store/user'
-import taskInsert from './taskInsert.vue'
 import { queryTasksByProjectIdList } from '@/api/task'
 import eventBus from '@/utils/event'
 import { cloneDeep } from 'lodash'
+import normalStatus from '../common/normalStatus.vue'
 const projectStore = useProjectStore()
 const projects = projectStore.projects
-const projectIdList: number[] = projects.map(project => parseInt(project.projectId))
+let projectIdList: number[]
 const tasks = ref<Task[]>([])
 const tasksData = ref<Task[]>([])
 const userId = useUserStore().userInfo.userId
-onMounted(() => {
+onBeforeMount(() => {
+    if (projects) {
+        projectIdList = projects.map(project => parseInt(project.projectId))
+    }
     queryAllTasks(projectIdList)
 })
 const queryAllTasks = async (projectIdList: number[]) => {
-    tasks.value = await queryTasksByProjectIdList(projectIdList)
-    console.log(projectIdList)
-    console.log(tasks.value.length)
-    tasksData.value = cloneDeep(tasks.value)
+    if (projectIdList) {
+        tasks.value = await queryTasksByProjectIdList(projectIdList)
+        tasksData.value = cloneDeep(tasks.value)
+    }
 }
 eventBus.on('allTasks', () => {
     tasksData.value = cloneDeep(tasks.value)
-    // creatorId
-    console.log(tasksData.value.length)
 })
 eventBus.on('creatorTasks', () => {
     tasksData.value = cloneDeep(tasks.value.filter((task: Task) => task.creatorId === userId))
-    console.log(tasksData.value.length)
 })
 eventBus.on('joinTasks', () => {
     tasksData.value = cloneDeep(tasks.value.filter((task: Task) => task.assignerId === userId))
-    console.log(tasksData.value.length)
 })
 defineProps({
     title: {

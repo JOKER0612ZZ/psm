@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zz.psmback.dao.ProjectDao">
-    <select id="queryUserProject" resultType="com.zz.psmback.common.entity.vo.ProjectDetails">
+    <select id="queryUserProject" resultType="com.zz.psmback.common.entity.vo.ProjectView">
         select p.project_id, project_name, project_status, description, p.creation_time, deadline, p.creator_id, mark,u.user_name,t.team_id
         FROM team_member as tm
         INNER JOIN team AS t ON tm.team_id = t.team_id

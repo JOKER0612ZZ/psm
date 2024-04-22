@@ -7,4 +7,6 @@ public interface TeamService {
     CommonResult<?> queryByUserId(int userId);
     CommonResult<?> updateTeam(TeamView view);
     CommonResult<?> queryTeamMembers(int teamId);
+    CommonResult<?> queryProjectMembers(int projectId);
+    CommonResult<?> joinTeam(int projectId,int userId);
 }

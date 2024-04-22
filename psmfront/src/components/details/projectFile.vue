@@ -1,17 +1,28 @@
 <template>
-    <div class="file" @click="handleClickOutside">
+    <div class="file">
         <el-main>
             <el-header>
-                <upload :psmfile="psmfile" :project-id="projectStore.projectInfo?.projectId!"></upload>
-                <el-button @click="backtoLastPage()" v-if="currentId.parentId !== null">返回上一级目录</el-button>
-                <el-button @click="backtoFirstPage()" v-if="currentId.parentId !== null">返回根目录</el-button>
-                <el-input></el-input>
+                <div>
+                    <el-button plain type="primary" @click="visible = true" v-if="currentId.parentId !== null">上传文件</el-button>
+                    <el-dialog v-model="visible" title="文件上传" width="500" :append-to-body="true">
+                        <upload :psmfile="psmfile" :project-id="projectStore.projectInfo?.projectId!" @uploaded="uploaded"></upload>
+                    </el-dialog>
+                    <el-button @click="backtoLastPage()" v-if="currentId.parentId !== null">返回上一级目录</el-button>
+                    <el-button @click="backtoFirstPage()" v-if="currentId.parentId !== null">返回根目录</el-button>
+                    <el-input placeholder="请输入文件名进行查询" @change="" class="search" v-if="currentId.parentId !== null">
+                        <template #suffix>
+                            <el-icon><Search/></el-icon>
+                        </template>
+                    </el-input>
+                    <el-button @click="getOperations(projectStore.projectInfo?.projectId!)">导出文件操作记录</el-button>
+                </div>
+                
             </el-header>
             <span>全部任务</span>
             <el-table :data="files" :row-style="rowStyle" @row-click="queryChildenFile">
                 <el-table-column label="文件名" prop="fileName">
                     <template #default="{ row }">
-                        <div class="file_name" @contextmenu.native="showContextMenu($event, row)">
+                        <div class="file_name">
                             <el-icon v-if="row.type === 'folder'" size="30">
                                 <Folder />
                             </el-icon>
@@ -30,31 +41,35 @@
                         <span v-if="row.type === 'file'">文件</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" >
                     <template #default="{ row }">
+                        <el-button type="danger" @click.stop="deletefile(projectId!,row)" v-if="currentId.parentId !== null" plain>删除</el-button>
                         <download :file="row" v-if="row.type === 'file'"></download>
                     </template>
                 </el-table-column>
             </el-table>
         </el-main>
     </div>
-    <contextMenu v-if="showMenu" :style="{ top: `${menuTop}px`, left: `${menuLeft}px` }" @close="closeContextMenu"
-        @createFolder="createFolder" @createFile="createFile" />
+    <!-- <contextMenu v-if="showMenu" :style="{ top: `${menuTop}px`, left: `${menuLeft}px` }" @close="closeContextMenu"
+        @createFolder="createFolder" @createFile="createFile" /> -->
 </template>
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useProjectStore } from '@/store/project';
-import { queryFile ,queryFileByFileId} from '@/api/file'
-import contextMenu from './contextMenu.vue'; // 导入右键菜单组件
+import { queryFile, queryFileByFileId, getOperations ,deleteFile} from '@/api/file'
+// import contextMenu from './contextMenu.vue'; // 导入右键菜单组件
 import download from '../pages/file/download.vue';
 import upload from '@/components/pages/file/upload.vue'
 import { useUserStore } from '@/store/user';
+import { MyUploadFile } from '@/api/interface';
+import { Search } from '@element-plus/icons-vue';
+const visible = ref(false)
 interface idlist {
     parentId: string | null,
     projectId: string,
 }
 const userStore = useUserStore()
-const psmfile = {
+const psmfile: MyUploadFile = {
     filePath: '',
     uploaderId: userStore.userInfo.userId,
     uploaderTime: '',
@@ -65,10 +80,11 @@ const psmfile = {
 // import eventBus from '@/utils/event';
 // import upload from '@/components/pages/file/upload.vue';
 const projectStore = useProjectStore()
+const projectId = projectStore.projectInfo?.projectId
 const files = ref<any>()
-const menuTop = ref<number>(0); // 右键菜单的位置
-const menuLeft = ref<number>(0);
-const showMenu = ref<boolean>(false); // 是否显示右键菜单
+// const menuTop = ref<number>(0); // 右键菜单的位置
+// const menuLeft = ref<number>(0);
+// const showMenu = ref<boolean>(false); // 是否显示右键菜单
 const lastFileId = ref<idlist[]>([])
 const currentId = ref<idlist>({
     parentId: null,
@@ -83,14 +99,15 @@ onMounted(async () => {
     })
     lastFileChange()
 })
-
-const lastFileChange = async() => {
+const deletefile=async(projectId:string,val:any)=>{
+    await deleteFile(projectId,val)
+    files.value =await queryFile(projectId,currentId.value.parentId)
+}
+const lastFileChange = async () => {
     if (files.value.length === 0) {
-        currentFilePath.value=await queryFileByFileId(currentId.value.parentId!)
-        console.log(currentFilePath.value)
+        currentFilePath.value = await queryFileByFileId(currentId.value.parentId!)
         psmfile.filePath = currentFilePath.value.filePath
         psmfile.parentId = currentFilePath.value.fileId
-        console.log(psmfile.filePath)
         psmfile.type = 'file'
     } else {
         const index: number = files.value[0].filePath.lastIndexOf('/')
@@ -136,48 +153,40 @@ const backtoFirstPage = async () => {
         projectId: projectStore.projectInfo?.projectId!
     })
 }
-const showContextMenu = (event: MouseEvent, row: any) => {
-    event.preventDefault();
-    menuTop.value = event.clientY;
-    menuLeft.value = event.clientX;
-    showMenu.value = true;
-    console.log(row)
-};
+const uploaded=async()=>{
+    files.value = await queryFile(currentId.value.projectId, currentId.value.parentId)
+    visible.value=false
+}
 
-const closeContextMenu = () => {
-    showMenu.value = false;
-};
+// const showContextMenu = (event: MouseEvent, row: any) => {
+//     event.preventDefault();
+//     menuTop.value = event.clientY;
+//     menuLeft.value = event.clientX;
+//     showMenu.value = true;
+//     console.log(row)
+// };
 
-const createFolder = async () => {
-    // 创建文件夹逻辑
-    await createFolder(/* 参数 */);
-    // 刷新文件列表
-    files.value = await queryFile(projectStore.projectInfo?.projectId!, null);
-};
+// const closeContextMenu = () => {
+//     showMenu.value = false;
+// };
 
-const createFile = async () => {
-    // 创建文件逻辑
-    await createFile(/* 参数 */);
-    // 刷新文件列表
-    files.value = await queryFile(projectStore.projectInfo?.projectId!, null);
-};
+// const handleClickOutside = (event: MouseEvent) => {
+//     const menu = document.querySelector('.context-menu') as HTMLElement | null;
+//     if (menu && !menu.contains(event.target as HTMLElement)) {
+//         closeContextMenu();
+//     }
+// };
 
-const handleClickOutside = (event: MouseEvent) => {
-    const menu = document.querySelector('.context-menu') as HTMLElement | null;
-    if (menu && !menu.contains(event.target as HTMLElement)) {
-        closeContextMenu();
-    }
-};
 
-// 添加全局点击事件监听
-onMounted(() => {
-    document.addEventListener('click', handleClickOutside);
-});
+// // 添加全局点击事件监听
+// onMounted(() => {
+//     document.addEventListener('click', handleClickOutside);
+// });
 
-// 移除全局点击事件监听
-onBeforeUnmount(() => {
-    document.removeEventListener('click', handleClickOutside);
-});
+// // 移除全局点击事件监听
+// onBeforeUnmount(() => {
+//     document.removeEventListener('click', handleClickOutside);
+// });
 </script>
 
 
@@ -204,12 +213,16 @@ onBeforeUnmount(() => {
     background-color: #fff;
     display: flex;
     flex-direction: row;
-
+    align-items: center;
+    justify-content: space-between;
     .el-input {
-        position: absolute;
+        float: left;
         height: 30px;
         width: 150px;
-        right: 40px;
+    }
+
+    .el-button {
+        margin-left: 20px;
     }
 }
 

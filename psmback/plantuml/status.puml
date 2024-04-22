@@ -1,0 +1,23 @@
+@startuml
+
+'https://plantuml.com/state-diagram
+hide empty description
+left to right direction
+
+
+[*] --> 未分配 : 任务创建
+
+未分配 --> 进行中 : 指定负责人
+
+进行中 --> 审核中 : 任务完成并上传附件
+
+审核中 --> 已完成 : 审核通过
+审核中 --> 进行中 : 审核不通过
+
+进行中 --> 已截止 : 截止时间到
+
+已完成 --> [*] : 结束
+已截止 --> [*] : 结束
+
+@enduml
+

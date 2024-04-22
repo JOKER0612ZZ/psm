@@ -1,5 +1,7 @@
 package com.zz.psmback.common.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zz.psmback.common.entity.vo.TeamView;
 import lombok.Data;
@@ -7,6 +9,7 @@ import lombok.Data;
 @Data
 @TableName("team")
 public class Team {
+    @TableId(type = IdType.AUTO)
     private Integer teamId;
     private String teamName;
     private Integer creatorId;

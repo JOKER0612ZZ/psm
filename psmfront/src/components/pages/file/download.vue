@@ -31,6 +31,7 @@ defineProps({
 })
 const download = (file:any)=>{
     visible.value=false
+    console.log(file)
     downloadFile(file)
 }
 </script>

@@ -1,5 +1,6 @@
 package com.zz.psmback.common.result;
 
+import javafx.scene.input.KeyCodeCombination;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -37,12 +38,14 @@ public enum ResponseCode {
     TASK_ASSIGNED(1023,"任务已被分配"),
     TASK_ASSIGN_SUCCESS(1024,"任务分配成功"),
     TASK_ASSIGN_FAILED(1025,"任务分配失败"),
+    ACTIVE(1026,"活跃"),
     PICTURE_UPLOAD_FAILED(2001,"上传图片失败"),
     GIVE_LIKE_FAILED(2002,"点赞失败"),
     PICTURE_LOAD_FAILED(2003,"图片加载失败"),
     UPDATE_USER_INFO_FAILED(2004,"修改用户信息失败"),
     UPDATE_USER_PASSWORD_FAILED(2005,"修改密码失败"),
     UNAUTHORIZED(401,"未认证");
+
     private final Integer code;
     private final String message;
 

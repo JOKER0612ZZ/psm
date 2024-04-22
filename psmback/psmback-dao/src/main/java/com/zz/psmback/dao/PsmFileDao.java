@@ -13,4 +13,6 @@ public interface PsmFileDao extends BaseMapper<PsmFile> {
     List<PsmFileView> queryByProjectIdAndParentId(int projectId, Integer parentId);
     PsmFileView queryByFileId(int fileId);
     void createOperation(PsmFile psmfile,int userId, String operationType);
+    List<PsmFile> queryFileByUserId(int userId);
+    List<PsmFileView> queryByTaskId(int taskId);
 }

@@ -1,14 +1,19 @@
 import request from '@/utils/request'
 import router from '@/router/index'
 import { useUserStore } from '@/store/user'
+import { useWebSocket } from '@/store/websocket'
+const socketStore = useWebSocket()
 const store = useUserStore()
 export const login = (data: any) => {
+    sessionStorage.clear()
     request.post('/api/login', {
-        userName:data.userName,
-        password:data.password
+        userName: data.userName,
+        password: data.password
     }).then(res => {
         if (res.success == true) {
             store.setUserInfo(res.data)
+            const newsocket = new WebSocket(`ws://localhost:8080/websocket/${res.data.userId}`)
+            socketStore.setSocket(newsocket)
             window.sessionStorage.setItem("token", res.data.token)
             router.replace('/home')
         }

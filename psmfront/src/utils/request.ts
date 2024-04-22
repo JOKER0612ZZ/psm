@@ -4,6 +4,7 @@ import { ElMessage } from 'element-plus'
 // 创建axios实例
 const service = axios.create({
     baseURL: 'http://localhost:8080', // api的base_url
+    // baseURL: 'http://120.78.5.157:8080', 
     timeout: 10000 // 请求超时时间
 })
 
@@ -23,7 +24,6 @@ service.interceptors.request.use(
         if (token !== null) {
             config.headers['token'] = token;
         }
-        return config;
         return config
     },
     (error: any) => {
@@ -70,7 +70,14 @@ service.interceptors.response.use(
 export default {
       
     // get方法
-    get<T = any>(url: string, params: object = {}): Promise<T> {
+    // get<T = any>(url: string, params: object = {}): Promise<T> {
+    //     return service({
+    //         url: url,
+    //         method: 'get',
+    //         params: params
+    //     })
+    // },
+    get(url: string, params: object = {}): Promise<ResponseData> {
         return service({
             url: url,
             method: 'get',

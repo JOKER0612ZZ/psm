@@ -27,18 +27,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+    //                authorizeRequests().antMatchers("/**").permitAll()
+//                .anyRequest().authenticated();
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.
-//                authorizeRequests().antMatchers("/**").permitAll()
-//                .anyRequest().authenticated();
-                authorizeRequests().antMatchers("/api/login","/api/register").anonymous().
-                anyRequest().authenticated();
-
+        http
+                .authorizeRequests().antMatchers("/api/login","/api/register").anonymous()
+                .antMatchers("/websocket/**").permitAll()
+                .anyRequest().authenticated();
         http.
                 addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
 }

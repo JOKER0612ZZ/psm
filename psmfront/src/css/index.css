@@ -7,16 +7,19 @@
     z-index: 2;
     border-bottom: 1px solid #eee;
 }
-.myHeader span{
+
+.myHeader span {
     display: flex;
     flex-direction: row;
     align-items: center;
     font-size: 17px;
     margin-left: 25px;
 }
-.myHeader span svg{
+
+.myHeader span svg {
     margin-right: 10px;
 }
+
 .myBody {
     display: flex;
     flex-direction: row;
@@ -36,15 +39,17 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    overflow-y: scroll;
+    overflow-y: auto;
     width: 80%;
 }
-.aside_menu{
+
+.aside_menu {
     margin: 0 10px;
-  
+
     display: flex;
     flex-direction: column;
 }
+
 .aside_menu a {
     display: flex;
     color: #333;
@@ -54,7 +59,8 @@
     text-align: left;
     cursor: pointer;
 }
-.aside_menu a svg{
+
+.aside_menu a svg {
     margin-right: 10px;
 }
 
@@ -62,12 +68,14 @@
     color: #6698ff;
     background-color: #6698ff1a;
 }
-.aside span{
+
+.aside span {
     display: block;
     text-align: left;
     margin: 0 10px;
     margin-top: 10px;
     font-size: 12px;
     color: #999;
-    line-height:40px;
+    line-height: 40px;
 }
+

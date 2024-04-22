@@ -3,6 +3,8 @@ package com.zz.psmback.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.zz.psmback.common.entity.PsmFile;
 import com.zz.psmback.common.result.CommonResult;
+import com.zz.psmback.common.result.ResponseCode;
+import com.zz.psmback.common.utils.psmAnnotation.AuthProject;
 import com.zz.psmback.service.PsmFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -22,9 +24,7 @@ public class PsmFileController {
 
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public CommonResult<?> uploadFile(@RequestParam("file") MultipartFile[] files, @RequestParam("psmfile") String psmFile) {
-        System.out.println(psmFile);
         PsmFile pf= JSON.parseObject(psmFile,PsmFile.class);
-        System.out.println(pf);
         return psmFileService.uploadFile(files, pf);
     }
 
@@ -42,7 +42,37 @@ public class PsmFileController {
         return psmFileService.queryFileByProjectIdAndParentId(projectId, parentId);
     }
     @RequestMapping(value = "/queryFileByFileId/{fileId}", method = RequestMethod.GET)
-    public CommonResult<?> queryFileByParentId(@PathVariable("fileId") Integer fileId){
-        return psmFileService.queryFileByFileId(fileId);
+    public CommonResult<?> queryFileByParentId(@PathVariable(name="fileId",required = false) String fileIdStr){
+        Integer fileId = null;
+        if (fileIdStr != null && !fileIdStr.equalsIgnoreCase("null")) {
+            try {
+                fileId = Integer.valueOf(fileIdStr);
+                return psmFileService.queryFileByFileId(fileId);
+            } catch (NumberFormatException e) {
+                return CommonResult.success(ResponseCode.SELECT_SUCCESS.getCode(), ResponseCode.SELECT_SUCCESS.getMessage(), null);
+            }
+        }
+        return CommonResult.success(ResponseCode.SELECT_SUCCESS.getCode(), ResponseCode.SELECT_SUCCESS.getMessage(), null);
     }
+    @RequestMapping(value ="/queryFileByUserId/{userId}", method = RequestMethod.GET)
+    public CommonResult<?> queryFileByUserId(@PathVariable("userId") int userId){
+        return psmFileService.queryFileByUserId(userId);
+    }
+    @RequestMapping(value = "/uploadTaskFile/{taskId}", method = RequestMethod.POST)
+    public CommonResult<?> uploadTaskFile(@RequestParam("file") MultipartFile[] files, @RequestParam("psmfile") String psmFile,
+                                          @PathVariable("taskId") Integer taskId) {
+        PsmFile pf= JSON.parseObject(psmFile,PsmFile.class);
+        return psmFileService.uploadTaskFile(files,pf,taskId);
+    }
+    @RequestMapping(value = "/queryByTaskId/{taskId}", method = RequestMethod.GET)
+    public CommonResult<?> queryByTaskId(@PathVariable("taskId") Integer taskId){
+        return psmFileService.queryByTaskId(taskId);
+    }
+
+    @AuthProject("delete:file")
+    @RequestMapping(value = "/deleteFile/{projectId}", method = RequestMethod.POST)
+    public CommonResult<?> deleteFile(@PathVariable("projectId") int projectId,@RequestBody PsmFile psmFile) {
+        return psmFileService.deleteFile(psmFile);
+    }
+
 }

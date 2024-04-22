@@ -7,6 +7,10 @@ spring:
     username: root
     password: zouzan@0612=ZZ
     driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
   redis:
     host: 120.78.5.157
     port: 6379
@@ -23,7 +27,7 @@ spring:
 
 
 file-storage:
-  upload-dir: programFile/
+  upload-dir: /usr/local/programFile
 
 #mybatis
 mybatis-plus:

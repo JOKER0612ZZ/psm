@@ -21,6 +21,7 @@
                  LEFT JOIN task_assign ta ON t.task_id = ta.task_id
                  LEFT JOIN user u1 ON ta.assigner_id = u1.user_id
         WHERE t.project_id = #{projectId}
+        ORDER BY t.creation_time DESC;
     </select>
     <select id="queryStatus" resultMap="statusCountMap">
         SELECT
@@ -28,12 +29,65 @@
             SUM(CASE WHEN status = '进行中' THEN 1 ELSE 0 END) AS 进行中,
             SUM(CASE WHEN status = '审核中' THEN 1 ELSE 0 END) AS 审核中,
             SUM(CASE WHEN status = '已完成' THEN 1 ELSE 0 END) AS 已完成,
-            SUM(CASE WHEN status = '已延期' THEN 1 ELSE 0 END) AS 已延期
+            SUM(CASE WHEN status = '已延期' THEN 1 ELSE 0 END) AS 已延期,
+            SUM(CASE WHEN status = '已截止' THEN 1 ELSE 0 END) AS 已截止
         FROM task
         where project_id=#{projectId}
     </select>
+    <select id="queryStatusByUserId" resultMap="statusCountMap">
+        SELECT
+            SUM(CASE WHEN status = '未分配' THEN 1 ELSE 0 END) AS 未分配,
+            SUM(CASE WHEN status = '进行中' THEN 1 ELSE 0 END) AS 进行中,
+            SUM(CASE WHEN status = '审核中' THEN 1 ELSE 0 END) AS 审核中,
+            SUM(CASE WHEN status = '已完成' THEN 1 ELSE 0 END) AS 已完成,
+            SUM(CASE WHEN status = '已延期' THEN 1 ELSE 0 END) AS 已延期,
+            SUM(CASE WHEN status = '已截止' THEN 1 ELSE 0 END) AS 已截止
+        FROM task inner join task_assign
+        on task.task_id = task_assign.task_id
+        where project_id=#{projectId} and task_assign.assigner_id =#{userId}
+    </select>
     <select id="assignedTask" resultType="java.lang.Integer">
         select * from task_assign where task_id=#{taskId}
+    </select>
+    <select id="queryTasksMyAssigned" resultType="com.zz.psmback.common.entity.vo.TaskView">
+        SELECT t.task_id, t.project_id, t.title, t.description, t.creation_time, t.deadline, t.creator_id, t.status,
+               u.nickname as creator_name, u1.nickname AS assign_name,assigner_id,project_name
+        FROM task t
+                 INNER JOIN user u ON t.creator_id = u.user_id
+                 INNER JOIN project p on t.project_id = p.project_id
+                 LEFT JOIN task_assign ta ON t.task_id = ta.task_id
+                 LEFT JOIN user u1 ON ta.assigner_id = u1.user_id
+        WHERE t.project_id = #{projectId}  AND  ta.assigner_id=#{assignerId}
+    </select>
+    <select id="queryTasksMyCreated" resultType="com.zz.psmback.common.entity.vo.TaskView">
+        SELECT t.task_id, t.project_id, t.title, t.description, t.creation_time, t.deadline, t.creator_id, t.status,
+               u.nickname as creator_name, u1.nickname AS assign_name,assigner_id,project_name
+        FROM task t
+                 INNER JOIN user u ON t.creator_id = u.user_id
+                 INNER JOIN project p on t.project_id = p.project_id
+                 LEFT JOIN task_assign ta ON t.task_id = ta.task_id
+                 LEFT JOIN user u1 ON ta.assigner_id = u1.user_id
+        WHERE t.project_id = #{projectId} AND t.creator_id = #{creatorId}
+    </select>
+    <select id="queryVerifyTasks" resultType="com.zz.psmback.common.entity.vo.TaskView">
+        SELECT t.task_id, t.project_id, t.title, t.description, t.creation_time, t.deadline, t.creator_id, t.status,
+               u.nickname as creator_name, u1.nickname AS assign_name,assigner_id,project_name
+        FROM task t
+                 INNER JOIN user u ON t.creator_id = u.user_id
+                 INNER JOIN project p on t.project_id = p.project_id
+                 LEFT JOIN task_assign ta ON t.task_id = ta.task_id
+                 LEFT JOIN user u1 ON ta.assigner_id = u1.user_id
+        WHERE t.project_id = #{projectId} and t.creator_id = #{userId} and t.status='审核中'
+    </select>
+    <select id="searchTask" resultType="com.zz.psmback.common.entity.vo.TaskView">
+        SELECT t.task_id, t.project_id, t.title, t.description, t.creation_time, t.deadline, t.creator_id, t.status,
+               u.nickname as creator_name, u1.nickname AS assign_name,assigner_id,project_name
+        FROM task t
+                 INNER JOIN user u ON t.creator_id = u.user_id
+                 INNER JOIN project p on t.project_id = p.project_id
+                 LEFT JOIN task_assign ta ON t.task_id = ta.task_id
+                 LEFT JOIN user u1 ON ta.assigner_id = u1.user_id
+        WHERE t.project_id = #{projectId} and t.title like concat('%',#{condition},'%')
     </select>
     <resultMap id="statusCountMap" type="java.util.LinkedHashMap" >
         <result column="未分配" property="未分配" jdbcType="INTEGER" />
@@ -41,6 +95,7 @@
         <result column="审核中" property="审核中" jdbcType="INTEGER" />
         <result column="已完成" property="已完成" jdbcType="INTEGER" />
         <result column="已延期" property="已延期" jdbcType="INTEGER" />
+        <result column="已截止" property="已截止" javaType="INTEGER" />
     </resultMap>
 
 </mapper>

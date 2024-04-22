@@ -46,13 +46,13 @@
                     <div id="account_info">
                         <span>账号信息</span>
                         <el-form label-position="right" label-width="60px" :model="changeForm">
-                            <el-form-item label="用户名" class="account_item_info">
+                            <!-- <el-form-item label="用户名" class="account_item_info">
                                 <p>{{ userInfo.userName }}</p>
-                            </el-form-item>
-                            <el-form-item label="" class="account_change">
+                            </el-form-item> -->
+                            <!-- <el-form-item label="" class="account_change">
                                 <el-input v-model="changeForm.userName"></el-input>
                                 <el-button type="primary" @click="updateUserName(changeForm.userName)">修改</el-button>
-                            </el-form-item>
+                            </el-form-item> -->
                             <el-form-item label="邮箱" class="account_item_info">
                                 <p>{{ userInfo.email }}</p>
                             </el-form-item>
@@ -94,7 +94,7 @@
 import { ref, onBeforeMount, reactive } from 'vue'
 import { useUserStore } from '@/store/user';
 import type { FormInstance, FormRules } from 'element-plus'
-import { updateEmailById, updateNickNameAndGenderById, updateUserNameById, updatePassWordById } from '@/api/user';
+import { updateEmailById, updateNickNameAndGenderById, updatePassWordById } from '@/api/user';
 import eventBus from '@/utils/event';
 const store = useUserStore();
 
@@ -161,10 +161,10 @@ const updatePass = (oldPass: string, newPass: string) => {
 }
 const passwordFormRef = ref<FormInstance>()
 
-const updateUserName = async (userName: string) => {
-    userInfo.value = await updateUserNameById(userName)
-    eventBus.emit('userInfo', userInfo.value);
-}
+// const updateUserName = async (userName: string) => {
+//     userInfo.value = await updateUserNameById(userName)
+//     eventBus.emit('userInfo', userInfo.value);
+// }
 const updateEmail = async (email: string) => {
     userInfo.value = await updateEmailById(email)
     eventBus.emit('userInfo', userInfo.value);

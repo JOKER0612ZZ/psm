@@ -1,5 +1,7 @@
 package com.zz.psmback.common.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zz.psmback.common.entity.vo.TaskView;
 import lombok.Data;
@@ -7,6 +9,7 @@ import lombok.Data;
 @Data
 @TableName("task")
 public class Task {
+    @TableId(type = IdType.AUTO)
     private Integer taskId;
     private Integer projectId;
     private String title;

@@ -1,0 +1,59 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+
+class ProjectController {
+    +queryProject(project: Project, teamName: String): CommonResult<?>
+    +queryUserProject(userId: Integer): CommonResult<?>
+    +addRecords(userId: Integer, project: ProjectView): void
+    +getRecords(userId: Integer): CommonResult<?>
+    +getProgress(projectId: Integer): CommonResult<?>
+    +createCrateFolder(path: String): boolean
+    +active(projectId: Integer, userId: Integer): void
+    +getActive(projectId: Integer): CommonResult<?>
+    +setPlan(projectId: Integer, file: MultipartFile): CommonResult<?>
+    +getPlan(projectId: Integer): CommonResult<?>
+    +updateProject(projectId: Integer, project: Project): CommonResult<?>
+}
+
+
+ interface ProjectService {
+        +createProject(project: Project, teamName: String): CommonResult<?>
+        +queryUserProject(userId: Integer): CommonResult<?>
+        +addRecord(projectView: ProjectView, userId: int): void
+        +getRecords(userId: int): CommonResult<?>
+        +queryProgress(projectId: int): CommonResult<?>
+        +active(projectId: Integer, userId: Integer): void
+        +getActive(projectId: Integer): CommonResult<?>
+        +updateProject(projectId: Integer, project: Project): CommonResult<?>
+   }
+
+
+
+    class ProjectServiceImpl implements ProjectService{
+        +createProject(project: Project, teamName: String): CommonResult<?>
+        +queryUserProject(userId: Integer): CommonResult<?>
+        +addRecord(projectView: ProjectView, userId: int): void
+        +getRecords(userId: int): CommonResult<?>
+        +queryProgress(projectId: int): CommonResult<?>
+        +active(projectId: Integer, userId: Integer): void
+        +getActive(projectId: Integer): CommonResult<?>
+        +updateProject(projectId: Integer, project: Project): CommonResult<?>
+    }
+ interface projectDao{
+    +queryUserProject(Integer userId):List<ProjectView>
+    +queryProgress(Integer projectId):Double
+ }
+
+ProjectController ..> ProjectServiceImpl
+ProjectServiceImpl ..> projectDao
+
+
+
+
+
+
+@enduml
+
+
